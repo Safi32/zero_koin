@@ -1,9 +1,17 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+
+import 'package:zero_koin/widgets/app_bar_container.dart';
+import 'package:zero_koin/widgets/earn_rewards.dart';
+import 'package:zero_koin/widgets/gift_popup.dart';
 import 'package:zero_koin/widgets/home_page_widgets.dart';
 import 'package:zero_koin/widgets/home_screen_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:zero_koin/widgets/progress_popup.dart';
+import 'package:zero_koin/widgets/session_popup.dart';
+import 'package:zero_koin/widgets/timer_popup.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,47 +33,8 @@ class HomeScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  height: screenHeight * 0.2,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(color: Colors.white),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(50),
-                      bottomRight: Radius.circular(50),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset("assets/menu.png"),
-                            Image.asset(
-                              "assets/zero_koin_logo.png",
-                              height: screenHeight * 0.1,
-                              width: screenWidth * 0.2,
-                            ),
-                            Image.asset("assets/notifcation.png"),
-                          ],
-                        ),
-                        Text(
-                          "Total Positions 77852",
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.02,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                AppBarContainer(
+                  color: Colors.transparent,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: screenHeight * 0.05),
@@ -76,15 +45,53 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            HomeScreenWidget(
-                              title: "Mining",
-                              subTitle: "500",
-                              imageURl: "assets/mining.png",
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
+                                      ),
+                                      child: Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        child: SessionPopup(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: HomeScreenWidget(
+                                title: "Mining",
+                                subTitle: "500",
+                                imageURl: "assets/mining.png",
+                              ),
                             ),
-                            HomeScreenWidget(
-                              title: "References",
-                              subTitle: "100",
-                              imageURl: "assets/references.png",
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
+                                      ),
+                                      child: Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        child: GiftPopup(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: HomeScreenWidget(
+                                title: "References",
+                                subTitle: "100",
+                                imageURl: "assets/references.png",
+                              ),
                             ),
                           ],
                         ),
@@ -95,15 +102,53 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            HomeScreenWidget(
-                              title: "Referrals",
-                              subTitle: "10",
-                              imageURl: "assets/referrals.png",
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
+                                      ),
+                                      child: Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        child: TimerPopup(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: HomeScreenWidget(
+                                title: "Referrals",
+                                subTitle: "10",
+                                imageURl: "assets/referrals.png",
+                              ),
                             ),
-                            HomeScreenWidget(
-                              title: "Mining",
-                              subTitle: "1/4",
-                              imageURl: "assets/power.png",
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
+                                      ),
+                                      child: Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        child: EarnRewards(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: HomeScreenWidget(
+                                title: "Power",
+                                subTitle: "1/4",
+                                imageURl: "assets/power.png",
+                              ),
                             ),
                           ],
                         ),
@@ -126,19 +171,41 @@ class HomeScreen extends StatelessWidget {
                                       dashPattern: [10, 5],
                                       strokeWidth: 2,
                                     ),
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: screenHeight * 0.1,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "Upload An Add",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: screenHeight * 0.02,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                sigmaX: 5.0,
+                                                sigmaY: 5.0,
+                                              ),
+                                              child: Dialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                child: ProgressPopup(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: screenHeight * 0.1,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "Upload An Add",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: screenHeight * 0.02,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -267,7 +334,7 @@ class HomeScreen extends StatelessWidget {
                                       Image.asset("assets/Vector.png"),
                                       SizedBox(width: screenWidth * 0.05),
                                       Text(
-                                        "Completetly Free - No KYC Required. \n Invite more friends and support the \n growth of the ecosystem",
+                                        "Completely Free - No KYC Required. \n Invite more friends and support the \n growth of the ecosystem",
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
