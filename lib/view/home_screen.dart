@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:zero_koin/view/invite_user_screen.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/earn_rewards.dart';
@@ -33,9 +34,7 @@ class HomeScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                AppBarContainer(
-                  color: Colors.transparent,
-                ),
+                AppBarContainer(color: Colors.transparent),
                 Padding(
                   padding: EdgeInsets.only(top: screenHeight * 0.05),
                   child: Column(
@@ -213,6 +212,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: screenHeight * 0.04),
                                   HomePageWidgets(
+                                    onPressed: () {},
                                     title: "Total ZEROKOIN",
                                     subtitle: "600",
                                     imageURL: "assets/mining.png",
@@ -222,6 +222,9 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: screenHeight * 0.03),
                                   HomePageWidgets(
+                                    onPressed: () {
+                                      Get.to(() => const InviteUserScreen());
+                                    },
                                     title: "Invite to Friend",
                                     subtitle:
                                         "invite your friends & earn \n 50 for Zerokoin referrals",

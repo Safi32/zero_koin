@@ -11,6 +11,7 @@ class HomePageWidgets extends StatelessWidget {
     required this.buttonText,
     required this.color,
     required this.buttonImage,
+    required this.onPressed,
   });
 
   final String title;
@@ -19,6 +20,7 @@ class HomePageWidgets extends StatelessWidget {
   final String buttonImage;
   final String buttonText;
   final Color color;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class HomePageWidgets extends StatelessWidget {
           SizedBox(
             width: 120,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: onPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: color,
                 foregroundColor: Colors.white,
