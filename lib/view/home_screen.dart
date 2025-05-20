@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:zero_koin/view/invite_user_screen.dart';
+import 'package:zero_koin/view/rewards_screen.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/earn_rewards.dart';
@@ -251,7 +252,9 @@ class HomeScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.to(() => const RewardsScreen());
+                                  },
                                   child: Text("Get More Rewards"),
                                 ),
                               ),
