@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:zero_koin/constant/app_colors.dart';
+
 import 'package:zero_koin/widgets/app_bar_container.dart';
-import 'package:zero_koin/widgets/wallet_page_widget.dart';
+import 'package:zero_koin/widgets/pop_up_button.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -22,7 +22,7 @@ class WalletScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                AppBarContainer(color: Colors.black),
+                AppBarContainer(color: Colors.black, showTotalPosition: false),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -42,7 +42,7 @@ class WalletScreen extends StatelessWidget {
                           ),
                           SizedBox(width: 30),
                           Text(
-                            "Profile",
+                            "Wallet",
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
@@ -51,189 +51,247 @@ class WalletScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: screenHeight * 0.7,
-                  width: screenWidth,
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: screenHeight * 0.18,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
+                      SizedBox(height: 10),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(
+                              height: screenHeight * 0.4,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Colors.white),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.lightBlue,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "W",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 30,
-                                          ),
-                                        ),
+                                    Text(
+                                      "ZeroKoin Withdrawal Pool",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
                                       ),
                                     ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          "John",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
+                                        SizedBox(
+                                          width: screenWidth * 0.6,
+                                          height: screenHeight * 0.06,
+                                          child: TextFormField(
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                            decoration: InputDecoration(
+                                              hintText: "5000",
+                                              hintStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                              ),
+                                              filled: true,
+                                              fillColor: Colors.transparent,
+                                              prefixIcon: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  10,
+                                                ),
+                                                child: Image.asset(
+                                                  "assets/mining.png",
+                                                ),
+                                              ),
+                                              prefixIconConstraints:
+                                                  BoxConstraints(
+                                                    minWidth: 40,
+                                                    minHeight: 40,
+                                                  ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide(
+                                                  color: Colors.white,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide(
+                                                  color: Colors.grey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide(
+                                                  color: Colors.red,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          "xyz@gmail.com",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
+                                        Image(
+                                          image: AssetImage(
+                                            "assets/loading.png",
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Spacer(),
-                                    Image(
-                                      image: AssetImage("assets/logout.png"),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                SizedBox(
-                                  width: screenWidth,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.lightBlue,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    onPressed: () {},
-                                    child: Text(
-                                      "ACTIVE",
+                                    SizedBox(height: 10),
+                                    Text(
+                                      "How to  Withdraw Zero Coin?",
                                       style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                         fontSize: 20,
                                         color: Colors.white,
                                       ),
                                     ),
-                                  ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      "When the Withdrawal Pool is 100% a box will be \n opened in this area for you to withdraw your \n wallet balance. Please type your Zerokoin \n (Web 3) wallet",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: screenWidth * 0.4,
+                                          height: screenHeight * 0.06,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                  color: Colors.white,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              backgroundColor: Colors.blue,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                            onPressed: () {},
+                                            child: Text(
+                                              "Wallet Web3",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: screenWidth * 0.4,
+                                          height: screenHeight * 0.06,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide(
+                                                  color: Colors.purple,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                            onPressed: () {},
+                                            child: Text(
+                                              "Exchange",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            WalletPageWidget(
-                              title: "Created On",
-                              subtitle: "25 Apr 2025",
-                            ),
-                            WalletPageWidget(
-                              title: "Last Sign In",
-                              subtitle: "1 hour ago",
+                              ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
-                        Container(
-                          height: screenHeight * 0.18,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "2With the decision taken in 2021, mining is \n allowed for only 1 device",
-                                ),
-                                Text(
-                                  "2With the decision taken in 2021, mining is \n allowed for only 1 device",
-                                ),
-                                Text(
-                                  "2With the decision taken in 2021, mining is \n allowed for only 1 device",
-                                ),
-                              ],
-                            ),
-                          ),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        height: screenHeight * 0.12,
+                        width: screenWidth,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF4D4D4D),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white),
                         ),
-                        SizedBox(height: 20),
-                        Container(
-                          height: screenHeight * 0.1,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(20),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Image(image: AssetImage("assets/mobile.png")),
-                                SizedBox(width: 20),
-                                Text(
-                                  "23106RN0DA",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "ZeroKoin Wallet Address",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Spacer(),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.lightBlue,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                              ),
+                              const SizedBox(height: 5),
+                              SizedBox(
+                                height: screenHeight * 0.05,
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: "Enter Zerokoin Wallet Address",
+                                    hintStyle: TextStyle(color: Colors.white70),
+
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10,
                                     ),
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "ONLINE",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.red,
+                                        width: 1.5,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: PopUpButton(
+                          buttonText: "WithDraw",
+                          buttonColor: Colors.blue,
+                          onPressed: () {},
+                          textColor: Colors.white,
+                          borderColor: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

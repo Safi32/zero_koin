@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:zero_koin/view/learn_and_earn.dart';
-
 import 'package:zero_koin/view/splash_screen.dart';
 
 void main() {
@@ -15,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LearnAndEarn(),
+      home: const SplashScreen(),
     );
   }
 }
