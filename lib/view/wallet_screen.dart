@@ -1,7 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:zero_koin/view/withdraw_pool.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/pop_up_button.dart';
+import 'package:zero_koin/widgets/wallet_popup.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -179,7 +185,9 @@ class WalletScreen extends StatelessWidget {
                                               backgroundColor: Colors.blue,
                                               foregroundColor: Colors.white,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Get.to(() => WithdrawPool());
+                                            },
                                             child: Text(
                                               "Wallet Web3",
                                               style: TextStyle(fontSize: 18),
@@ -286,7 +294,23 @@ class WalletScreen extends StatelessWidget {
                         child: PopUpButton(
                           buttonText: "WithDraw",
                           buttonColor: Colors.blue,
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 5.0,
+                                    sigmaY: 5.0,
+                                  ),
+                                  child: Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    child: WalletPopup(),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                           textColor: Colors.white,
                           borderColor: Colors.white,
                         ),

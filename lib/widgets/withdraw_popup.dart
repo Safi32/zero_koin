@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zero_koin/constant/app_colors.dart';
-import 'package:zero_koin/widgets/pop_up_button.dart';
-import 'package:zero_koin/widgets/socail_media_widgets.dart';
 
-class WalletPopup extends StatelessWidget {
-  const WalletPopup({super.key});
+class WithdrawPopup extends StatelessWidget {
+  const WithdrawPopup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +11,7 @@ class WalletPopup extends StatelessWidget {
 
     return Container(
       width: screenWidth * 0.8,
-      height: screenHeight * 0.5,
+      height: screenHeight * 0.45,
       padding: EdgeInsets.all(screenWidth * 0.06),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -26,36 +23,39 @@ class WalletPopup extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               children: [
-                SvgPicture.asset(
-                  "assets/Withdraw Successfull ICON.svg",
+                Image(
+                  image: AssetImage('assets/earn_rewards.png'),
                   height: 100,
                   width: 100,
                 ),
                 SizedBox(height: 20),
                 Text(
                   'Withdrawn Successful',
+
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.blue,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'You\'ve successfully \n withdrawn 6000 coints to the \n selected address',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: Colors.blue),
-                ),
                 SizedBox(height: 30),
                 SizedBox(
-                  width: screenWidth,
-                  child: PopUpButton(
-                    buttonText: "Done",
-                    buttonColor: Colors.blue,
+                  width: screenWidth * 0.7,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.lightBlue,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.1,
+                        vertical: screenHeight * 0.02,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     onPressed: () {},
-                    textColor: Colors.white,
-                    borderColor: Colors.blue,
+                    child: Text("View more Rewards"),
                   ),
                 ),
               ],
