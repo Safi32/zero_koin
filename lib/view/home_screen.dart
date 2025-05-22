@@ -11,6 +11,7 @@ import 'package:zero_koin/widgets/gift_popup.dart';
 import 'package:zero_koin/widgets/home_page_widgets.dart';
 import 'package:zero_koin/widgets/home_screen_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:zero_koin/widgets/my_drawer.dart';
 import 'package:zero_koin/widgets/progress_popup.dart';
 import 'package:zero_koin/widgets/session_popup.dart';
 import 'package:zero_koin/widgets/timer_popup.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      drawer: MyDrawer(),
       body: Stack(
         children: [
           Image.asset(

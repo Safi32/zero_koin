@@ -6,6 +6,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:zero_koin/view/withdraw_pool.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
+import 'package:zero_koin/widgets/my_drawer.dart';
 import 'package:zero_koin/widgets/pop_up_button.dart';
 import 'package:zero_koin/widgets/wallet_popup.dart';
 
@@ -17,6 +18,7 @@ class WalletScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      drawer: MyDrawer(),
       body: Stack(
         children: [
           Image.asset(
