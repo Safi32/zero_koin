@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:zero_koin/constant/app_colors.dart';
+import 'package:zero_koin/view/block_chain_screen.dart';
 import 'package:zero_koin/view/guide_screen.dart';
+import 'package:zero_koin/view/help_ai.dart';
+import 'package:zero_koin/view/help_support_screen.dart';
+import 'package:zero_koin/view/play_store_screen.dart';
+import 'package:zero_koin/view/settings_screen.dart';
 import 'package:zero_koin/view/socail_media_pages.dart';
+import 'package:zero_koin/view/transaction_screen.dart';
+import 'package:zero_koin/view/white_paper_screen.dart';
+import 'package:zero_koin/view/zero_web_screen.dart';
+import 'package:zero_koin/view/zerokoin_buy.dart';
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/drawer_widget.dart';
 
@@ -146,47 +155,65 @@ class MyDrawer extends StatelessWidget {
                           DrawerWidget(
                             imageUrl: "assets/icon_03.png",
                             title: "Zerokoin Buy",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => ZerokoinBuy());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_04.png",
                             title: "Transactions",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => TransactionsScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_05.png",
                             title: "ZeroKoin Website",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => ZeroWebScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_06.png",
                             title: "Play Store",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => PlayStoreScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_07.png",
                             title: "Blockchain",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => BlockchainScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_08.png",
                             title: "Whitepaper",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => WhitePaperScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_09.png",
                             title: "Help AI (Telegram)",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => HelpAiScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_10.png",
                             title: "Help & Support",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => HelpSupportScreen());
+                            },
                           ),
                           DrawerWidget(
                             imageUrl: "assets/icon_11.png",
                             title: "Setting",
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => SettingsScreen());
+                            },
                           ),
                         ],
                       ),
