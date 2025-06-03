@@ -1,16 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:zero_koin/constant/app_colors.dart';
-import 'package:zero_koin/widgets/app_bar_container.dart';
-import 'package:zero_koin/widgets/wallet_page_widget.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/controllers/theme_controller.dart';
+import 'package:zero_koin/view/bottom_bar.dart';
 
-class UserProfileScreen extends StatelessWidget {
+import 'package:zero_koin/widgets/app_bar_container.dart';
+import 'package:zero_koin/widgets/my_drawer.dart';
+import 'package:zero_koin/widgets/wallet_page_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
+
+class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
+
+  @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  String deviceName = 'Loading...';
+  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _getDeviceName();
+  }
+
+  Future<void> _getDeviceName() async {
+    try {
+      if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        setState(() {
+          deviceName = iosInfo.name;
+        });
+      } else if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        setState(() {
+          deviceName = androidInfo.model;
+        });
+      } else if (Platform.isMacOS) {
+        final macInfo = await deviceInfo.macOsInfo;
+        setState(() {
+          deviceName = macInfo.computerName;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        deviceName = 'Unknown Device';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
+      drawer: MyDrawer(),
       body: Stack(
         children: [
           Image.asset(
@@ -19,225 +67,282 @@ class UserProfileScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                AppBarContainer(color: Colors.black),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Image(
-                              image: AssetImage("assets/arrow_back.png"),
-                            ),
-                          ),
-                          SizedBox(width: 30),
-                          Text(
-                            "Profile",
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+          Column(
+            children: [
+              AppBarContainer(color: Colors.black.withValues(alpha: 0.6), showTotalPosition: false),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
                 ),
-                Container(
-                  height: screenHeight * 0.7,
-                  width: screenWidth,
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    child: Column(
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Container(
-                          height: screenHeight * 0.18,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(20),
+                        GestureDetector(
+                          onTap: () {
+                            if (Navigator.canPop(context)) {
+                              Get.back();
+                            } else {
+                              Get.offAll(() => const BottomBar());
+                            }
+                          },
+                          child: Image(
+                            image: AssetImage("assets/arrow_back.png"),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
+                        ),
+                        SizedBox(width: 30),
+                        Text(
+                          "Profile",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Obx(
+                  () => Container(
+                    width: screenWidth,
+                    decoration: BoxDecoration(
+                      color: themeController.contentBackgroundColor,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        child: Column(
+                        children: [
+                          Container(
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF000000),
+                              border: Border.all(
+                                color: themeController.borderColor,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.lightBlue,
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "W",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 30,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF0682A2),
+                                          borderRadius: BorderRadius.circular(
+                                            50,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "W",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 30,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "John",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "John",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          Text(
+                                            "xyz@gmail.com",
+                                            style: TextStyle(
+                                              color: Color(0xFFC4C9D5),
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                        height: 50,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF0882A2),
+                                          borderRadius: BorderRadius.circular(25.12),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/logout.svg",
+                                            width: 34,
+                                            height: 30,
                                           ),
                                         ),
-                                        Text(
-                                          "xyz@gmail.com",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                          ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 15),
+                                  SizedBox(
+                                    width: screenWidth,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF0682A2),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
-                                      ],
+                                      ),
+                                      onPressed: () {},
+                                      child: Text(
+                                        "ACTIVE",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
-                                    Spacer(),
-                                    Image(
-                                      image: AssetImage("assets/logout.png"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                            indent: 20,
+                            endIndent: 20,
+                          ),
+                          SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              WalletPageWidget(
+                                title: "Created On",
+                                subtitle: "25 Apr 2025",
+                              ),
+                              WalletPageWidget(
+                                title: "Last Sign In",
+                                subtitle: "1 hour ago",
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: themeController.borderColor,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 15,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "1. Mining access is permitted on only one device per account.",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeController.textColor,
                                     ),
-                                  ],
-                                ),
-                                Spacer(),
-                                SizedBox(
-                                  width: screenWidth,
-                                  child: ElevatedButton(
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "2. Using multiple devices simultaneously is a breach of policy.",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeController.textColor,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "3. Accounts found in violation may be restricted or denied withdrawals.",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeController.textColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Container(
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: themeController.borderColor,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              child: Row(
+                                children: [
+                                  Image(image: AssetImage("assets/mobile.png")),
+                                  SizedBox(width: 20),
+                                  Text(
+                                    deviceName,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: themeController.textColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.lightBlue,
+                                      backgroundColor: Color(0xFF0682A2),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
                                     onPressed: () {},
                                     child: Text(
-                                      "ACTIVE",
+                                      "ONLINE",
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
+                        ],
                         ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            WalletPageWidget(
-                              title: "Created On",
-                              subtitle: "25 Apr 2025",
-                            ),
-                            WalletPageWidget(
-                              title: "Last Sign In",
-                              subtitle: "1 hour ago",
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Container(
-                          height: screenHeight * 0.18,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "2With the decision taken in 2021, mining is \n allowed for only 1 device",
-                                ),
-                                Text(
-                                  "2With the decision taken in 2021, mining is \n allowed for only 1 device",
-                                ),
-                                Text(
-                                  "2With the decision taken in 2021, mining is \n allowed for only 1 device",
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Container(
-                          height: screenHeight * 0.1,
-                          width: screenWidth,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              children: [
-                                Image(image: AssetImage("assets/mobile.png")),
-                                SizedBox(width: 20),
-                                Text(
-                                  "23106RN0DA",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Spacer(),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.lightBlue,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "ONLINE",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

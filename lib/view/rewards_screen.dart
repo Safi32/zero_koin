@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:zero_koin/view/learn_and_earn.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/controllers/theme_controller.dart';
 import 'package:zero_koin/view/socail_media_pages.dart';
+import 'package:zero_koin/view/invite_user_screen.dart';
+import 'package:zero_koin/view/bottom_bar.dart';
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/rewards_widget.dart';
+import 'package:zero_koin/widgets/my_drawer.dart';
 
 class RewardsScreen extends StatelessWidget {
   const RewardsScreen({super.key});
@@ -13,7 +15,9 @@ class RewardsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
+      drawer: MyDrawer(),
       body: Stack(
         children: [
           Image.asset(
@@ -25,7 +29,7 @@ class RewardsScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                AppBarContainer(showTotalPosition: false, color: Colors.black),
+                AppBarContainer(color: Colors.black.withOpacity(0.6), showTotalPosition: false),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -55,151 +59,176 @@ class RewardsScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 20),
-                      Container(
-                        height: screenHeight * 0.2,
-                        width: screenWidth,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Image.asset(
-                                'assets/stroke.png',
-                                width: screenWidth * 0.3,
-                              ),
+                      Obx(
+                        () => Container(
+                          width: screenWidth,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            border: Border.all(
+                              color: themeController.borderColor,
                             ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(20),
+                                  ),
+                                  child: Image.asset(
+                                    'assets/stroke.png',
+                                    width: screenWidth * 0.25,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
 
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Your Total ZeroKoins",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: screenWidth * 0.06,
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Your Total ZeroKoins",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: screenWidth * 0.055,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    children: [
-                                      Image(
-                                        image: AssetImage("assets/trophy.png"),
-                                      ),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Image(
+                                          image: AssetImage(
+                                            "assets/trophy.png",
+                                          ),
+                                          width: screenWidth * 0.2,
+                                          height: screenWidth * 0.2,
+                                          fit: BoxFit.contain,
+                                        ),
 
-                                      const SizedBox(height: 8, width: 10),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "1200 Coins",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: screenWidth * 0.06,
-                                            ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "1200 Coins",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: screenWidth * 0.055,
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                "Once you reach 4000 ZeroKoins, you'll be eligible to make a withdrawal.",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: screenWidth * 0.03,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            "Once you reach 6000 ZeroKoins, you’ll \n be eligible to make a withdrawal.",
-                                            style: TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: screenWidth * 0.03,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
-                  height: screenHeight * 0.55,
-                  width: screenWidth,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                Obx(
+                  () => Container(
+                    height: screenHeight * 0.55,
+                    width: screenWidth,
+                    decoration: BoxDecoration(
+                      color: themeController.contentBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "More Reward",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Column(
-                          children: [
-                            RewardsWidget(
-                              onPressed: () {
-                                Get.to(() => const SocailMediaPages());
-                              },
-                              imageUrl: "assets/social.png",
-                              title: "Follow Socail Media Earn",
-                            ),
-                            SizedBox(height: 20),
-                            RewardsWidget(
-                              onPressed: () {
-                                Get.to(() => LearnAndEarn());
-                              },
-                              imageUrl: "assets/learn.png",
-                              title: "Learn and Earn Daily",
-                            ),
-                            SizedBox(height: 20),
-                            RewardsWidget(
-                              onPressed: () {},
-                              imageUrl: "assets/invite_friend.png",
-                              title: "Invite Friends",
-                            ),
-                            SizedBox(height: 30),
-                            SizedBox(
-                              width: Get.width,
-                              height: screenHeight * 0.07,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "More Reward",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeController.textColor,
                                 ),
-                                onPressed: () {},
-                                child: Text("Withdraw"),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Column(
+                            children: [
+                              RewardsWidget(
+                                onPressed: () {
+                                  Get.to(() => const SocailMediaPages());
+                                },
+                                imageUrl: "assets/Vector (2).svg",
+                                title: "Follow Social Media Earn",
+                              ),
+                              SizedBox(height: 20),
+                              RewardsWidget(
+                                onPressed: () {
+                                  Get.to(() => const BottomBar(initialIndex: 2));
+                                },
+                                imageUrl: "assets/Group.svg",
+                                title: "Learn and Earn Daily",
+                              ),
+                              SizedBox(height: 20),
+                              RewardsWidget(
+                                onPressed: () {
+                                  Get.to(() => const InviteUserScreen());
+                                },
+                                imageUrl: "assets/Vector (3).svg",
+                                title: "Invite Friends",
+                              ),
+                              SizedBox(height: 30),
+                              SizedBox(
+                                width: Get.width,
+                                height: screenHeight * 0.07,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF0682A2),
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: Text("Withdraw"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

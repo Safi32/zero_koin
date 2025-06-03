@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:zero_koin/view/withdraw_pool.dart';
+import 'package:zero_koin/view/guide_screen.dart';
+import 'package:zero_koin/view/bottom_bar.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/my_drawer.dart';
 import 'package:zero_koin/widgets/pop_up_button.dart';
 import 'package:zero_koin/widgets/wallet_popup.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zero_koin/widgets/wallet_web3_popup.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -30,7 +34,10 @@ class WalletScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                AppBarContainer(color: Colors.black, showTotalPosition: false),
+                AppBarContainer(
+                  color: Colors.black.withOpacity(0.6),
+                  showTotalPosition: false,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -42,13 +49,13 @@ class WalletScreen extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.pop(context);
+                              Get.offAll(() => const BottomBar(initialIndex: 0));
                             },
                             child: Image(
                               image: AssetImage("assets/arrow_back.png"),
                             ),
                           ),
-                          SizedBox(width: 30),
+                          SizedBox(width: 40),
                           Text(
                             "Wallet",
                             style: TextStyle(
@@ -59,12 +66,11 @@ class WalletScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       SingleChildScrollView(
                         child: Column(
                           children: [
                             Container(
-                              height: screenHeight * 0.4,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -90,6 +96,8 @@ class WalletScreen extends StatelessWidget {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           width: screenWidth * 0.6,
@@ -99,7 +107,7 @@ class WalletScreen extends StatelessWidget {
                                               color: Colors.white,
                                             ),
                                             decoration: InputDecoration(
-                                              hintText: "5000",
+                                              hintText: "0",
                                               hintStyle: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -111,7 +119,7 @@ class WalletScreen extends StatelessWidget {
                                                   10,
                                                 ),
                                                 child: Image.asset(
-                                                  "assets/mining.png",
+                                                  "assets/zerokoingold.png",
                                                 ),
                                               ),
                                               prefixIconConstraints:
@@ -155,7 +163,7 @@ class WalletScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: 10),
                                     Text(
-                                      "How to  Withdraw Zero Coin?",
+                                      "How to Withdraw Zero Coin?",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -163,9 +171,36 @@ class WalletScreen extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: 10),
-                                    Text(
-                                      "When the Withdrawal Pool is 100% a box will be \n opened in this area for you to withdraw your \n wallet balance. Please type your Zerokoin \n (Web 3) wallet",
-                                      style: TextStyle(color: Colors.white),
+                                    RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(color: Colors.white),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                "When the Withdrawal Pool is 100% a box will be opened in this area for you to withdraw your wallet balance. Please type your Zerokoin (Web 3) wallet ",
+                                          ),
+                                          WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.middle,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Get.to(() => GuideScreen());
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 4,
+                                                ),
+                                                child: SvgPicture.asset(
+                                                  "assets/Info Icon.svg",
+                                                  color: Color(0xFF0682A2),
+                                                  height: 20,
+                                                  width: 20,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(height: 20),
                                     Row(
@@ -184,15 +219,34 @@ class WalletScreen extends StatelessWidget {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
-                                              backgroundColor: Colors.blue,
+                                              backgroundColor: Color(
+                                                0xFF0682A2,
+                                              ),
                                               foregroundColor: Colors.white,
                                             ),
                                             onPressed: () {
-                                              Get.to(() => WithdrawPool());
+                                              showDialog(
+                                                context: context,
+                                                builder: (
+                                                  BuildContext context,
+                                                ) {
+                                                  return BackdropFilter(
+                                                    filter: ImageFilter.blur(
+                                                      sigmaX: 5.0,
+                                                      sigmaY: 5.0,
+                                                    ),
+                                                    child: Dialog(
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      child: WalletWeb3Popup(),
+                                                    ),
+                                                  );
+                                                },
+                                              );
                                             },
                                             child: Text(
                                               "Wallet Web3",
-                                              style: TextStyle(fontSize: 18),
+                                              style: TextStyle(fontSize: screenHeight * 0.02),
                                             ),
                                           ),
                                         ),
@@ -203,7 +257,7 @@ class WalletScreen extends StatelessWidget {
                                             style: ElevatedButton.styleFrom(
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide(
-                                                  color: Colors.purple,
+                                                  color: Color(0xFF9247FB),
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -230,7 +284,6 @@ class WalletScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       Container(
-                        height: screenHeight * 0.12,
                         width: screenWidth,
                         decoration: BoxDecoration(
                           color: Color(0xFF4D4D4D),
@@ -255,7 +308,6 @@ class WalletScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 5),
                               SizedBox(
-                                height: screenHeight * 0.05,
                                 child: TextFormField(
                                   style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
@@ -295,7 +347,7 @@ class WalletScreen extends StatelessWidget {
                         width: double.infinity,
                         child: PopUpButton(
                           buttonText: "WithDraw",
-                          buttonColor: Colors.blue,
+                          buttonColor: Color(0xFF0682A2),
                           onPressed: () {
                             showDialog(
                               context: context,

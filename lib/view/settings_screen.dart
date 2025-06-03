@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/controllers/theme_controller.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _notificationEnabled = true;
+  late ThemeController _themeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeController = Get.find<ThemeController>();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.sizeOf(context).height;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: _themeController.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -18,9 +35,9 @@ class SettingsScreen extends StatelessWidget {
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
                     colors: [
-                      const Color.fromARGB(255, 30, 144, 133),
-                      const Color.fromARGB(255, 103, 101, 91),
-                      const Color.fromARGB(255, 211, 180, 39),
+                      const Color(0xFF08647C),
+                      const Color(0xFF08627A),
+                      const Color(0xFF8B880D),
                     ],
                   ),
                 ),
@@ -52,16 +69,29 @@ class SettingsScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: _themeController.contentBackgroundColor,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Settings Section
-                      _buildSettingItem('Notification', true, (value) {}),
+                      _buildSettingItem('Notification', _notificationEnabled, (
+                        value,
+                      ) {
+                        setState(() {
+                          _notificationEnabled = value;
+                        });
+                      }),
                       SizedBox(height: 16),
-                      _buildSettingItem('Dark Mode', false, (value) {}),
+                      _buildSettingItem(
+                        'Dark Mode',
+                        _themeController.isDarkMode,
+                        (value) {
+                          _themeController.setTheme(value);
+                          setState(() {}); // Trigger rebuild to update UI
+                        },
+                      ),
                       SizedBox(height: 16),
                       _buildInfoItem('Cache Used', '20.8 MB'),
                       SizedBox(height: 16),
@@ -72,11 +102,14 @@ class SettingsScreen extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: _themeController.cardColor,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withValues(alpha: 0.1),
+                              color:
+                                  _themeController.isDarkMode
+                                      ? Colors.black.withValues(alpha: 0.3)
+                                      : Colors.grey.withValues(alpha: 0.1),
                               spreadRadius: 1,
                               blurRadius: 10,
                               offset: Offset(0, 2),
@@ -91,16 +124,30 @@ class SettingsScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.grey[600],
+                                color: _themeController.subtitleColor,
                               ),
                             ),
                             SizedBox(height: 20),
-                            SizedBox(
-                              height: 25,
-                              child: Image.asset(
-                                'assets/bsc-scan.png',
-                                fit: BoxFit.cover,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 25,
+                                  child: Image.asset(
+                                    'assets/image.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'BscScan',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: _themeController.isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
 
                             SizedBox(height: 16),
@@ -125,7 +172,7 @@ class SettingsScreen extends StatelessWidget {
                                   'Zerokoin verified Contract',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.grey[600],
+                                    color: _themeController.subtitleColor,
                                   ),
                                 ),
                               ],
@@ -148,9 +195,9 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: _themeController.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: _themeController.borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,7 +207,7 @@ class SettingsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: _themeController.textColor,
             ),
           ),
           Switch(
@@ -181,9 +228,9 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: _themeController.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: _themeController.borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -193,10 +240,16 @@ class SettingsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: _themeController.textColor,
             ),
           ),
-          Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              color: _themeController.subtitleColor,
+            ),
+          ),
         ],
       ),
     );

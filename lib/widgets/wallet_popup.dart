@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zero_koin/constant/app_colors.dart';
 import 'package:zero_koin/widgets/pop_up_button.dart';
-import 'package:zero_koin/widgets/socail_media_widgets.dart';
 
 class WalletPopup extends StatelessWidget {
   const WalletPopup({super.key});
@@ -11,45 +10,61 @@ class WalletPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    
+    // Calculate responsive dimensions
+    final popupWidth = screenWidth * 0.85;
+    final popupHeight = screenHeight * 0.45;
+    final padding = screenWidth * 0.04;
+    final iconSize = screenWidth * 0.20;
+    final titleFontSize = screenWidth * 0.045;
+    final messageFontSize = screenWidth * 0.035;
+    final spacing = screenHeight * 0.015;
 
     return Container(
-      width: screenWidth * 0.8,
-      height: screenHeight * 0.5,
-      padding: EdgeInsets.all(screenWidth * 0.06),
+      width: popupWidth,
+      height: popupHeight,
+      padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(screenWidth * 0.05),
       ),
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * 0.05,
+              vertical: screenHeight * 0.015,
+            ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
                   "assets/Withdraw Successfull ICON.svg",
-                  height: 100,
-                  width: 100,
+                  height: iconSize,
+                  width: iconSize,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: spacing),
                 Text(
                   'Withdrawn Successful',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: titleFontSize,
                     fontWeight: FontWeight.bold,
                     color: AppColors.blue,
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: spacing),
                 Text(
-                  'You\'ve successfully \n withdrawn 6000 coints to the \n selected address',
+                  'You\'ve successfully \n withdrawn 4000 coins to the \n selected address',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: Colors.blue),
+                  style: TextStyle(
+                    fontSize: messageFontSize,
+                    color: Colors.blue,
+                  ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: spacing * 1.5),
                 SizedBox(
-                  width: screenWidth,
+                  width: popupWidth * 0.7,
                   child: PopUpButton(
                     buttonText: "Done",
                     buttonColor: Colors.blue,
@@ -62,13 +77,17 @@ class WalletPopup extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 0,
-            top: 0,
+            right: screenWidth * 0.02,
+            top: screenHeight * 0.01,
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
               },
-              child: Icon(Icons.close, color: Colors.grey),
+              child: Icon(
+                Icons.close,
+                color: Colors.grey,
+                size: screenWidth * 0.05,
+              ),
             ),
           ),
         ],

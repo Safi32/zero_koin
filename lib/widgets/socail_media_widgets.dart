@@ -23,7 +23,7 @@ class SocailMediaWidgets extends StatelessWidget {
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             side: BorderSide(color: Colors.white),
-            backgroundColor: Colors.blue,
+            backgroundColor: Color(0xFF0682A2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

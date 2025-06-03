@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/pop_up_button.dart';
-import 'package:zero_koin/widgets/wallet_popup.dart' show WalletPopup;
 import 'package:zero_koin/widgets/wallet_web3_popup.dart';
 
 class WithdrawPool extends StatelessWidget {
@@ -24,7 +23,7 @@ class WithdrawPool extends StatelessWidget {
           ),
           Column(
             children: [
-              AppBarContainer(color: Colors.black, showTotalPosition: false),
+              AppBarContainer(color: Colors.black.withOpacity(0.6)),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,

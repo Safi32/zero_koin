@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:zero_koin/view/sign_in_successful.dart';
 
 class UserRegisterationScreen extends StatelessWidget {
@@ -18,13 +19,13 @@ class UserRegisterationScreen extends StatelessWidget {
             child: Column(
               children: [
                 Image.asset(
-                  'assets/zero_koin_logo.png',
+                  'assets/bluelogo.png',
                   height: 100,
                   width: 100,
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Register',
+                  'Zero Koin',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -36,20 +37,63 @@ class UserRegisterationScreen extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Opacity(
-                          opacity: 0.1,
-                          child: Image.asset('assets/zero_koin_logo.png'),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 50),
+                          child: Opacity(
+                            opacity: 0.1,
+                            child: Image.asset(
+                              'assets/bluelogo.png',
+                              height: 400,
+                              width: 400,
+                            ),
+                          ),
                         ),
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
-                              'By signing in with Google, you agree to Zero Koin\'s Terms of Service and confirm that you have read and understood our Privacy Policy.',
+                            RichText(
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.white,
-                                height: 1.5,
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white,
+                                  height: 1.5,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        'By signing in with Google, you agree to Zero Koin\'s Terms of Service and confirm that you have read and understood our ',
+                                  ),
+                                  TextSpan(
+                                    text: 'Privacy Policy',
+                                    style: TextStyle(
+                                      color: Color(0xFF00FFFF),
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Color(0xFF00FFFF),
+                                    ),
+                                    recognizer:
+                                        TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            const String urlString =
+                                                'https://google.com';
+                                            try {
+                                              if (await url_launcher.canLaunch(
+                                                urlString,
+                                              )) {
+                                                await url_launcher.launch(
+                                                  urlString,
+                                                  forceSafariVC: false,
+                                                  forceWebView: false,
+                                                );
+                                              }
+                                            } catch (e) {
+                                              // Handle error silently
+                                            }
+                                          },
+                                  ),
+                                  TextSpan(text: '.'),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -86,7 +130,7 @@ class UserRegisterationScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 10),
                             const Text(
-                              'v0.0.0',
+                              'v1.0.0',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.white,

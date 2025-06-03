@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/controllers/theme_controller.dart';
 
 class WhitePaperScreen extends StatefulWidget {
   const WhitePaperScreen({super.key});
@@ -7,12 +9,12 @@ class WhitePaperScreen extends StatefulWidget {
 }
 
 class _WhitePaperScreenState extends State<WhitePaperScreen> {
-
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.sizeOf(context).height;
+    final ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: themeController.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -23,11 +25,7 @@ class _WhitePaperScreenState extends State<WhitePaperScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
-                    colors: [
-                      const Color.fromARGB(255, 30, 144, 133),
-                      const Color.fromARGB(255, 103, 101, 91),
-                      const Color.fromARGB(255, 211, 180, 39),
-                    ],
+                    colors: themeController.gradientColors,
                   ),
                 ),
                 child: Padding(
@@ -58,7 +56,9 @@ class _WhitePaperScreenState extends State<WhitePaperScreen> {
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: BoxDecoration(
+                  color: themeController.contentBackgroundColor,
+                ),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: SizedBox(
@@ -73,8 +73,8 @@ class _WhitePaperScreenState extends State<WhitePaperScreen> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade400),
+                        color: themeController.cardColor,
+                        border: Border.all(color: themeController.borderColor),
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),

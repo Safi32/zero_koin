@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zero_koin/constant/app_colors.dart';
 
 class NotifcationPopup extends StatelessWidget {
   const NotifcationPopup({super.key});

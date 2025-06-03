@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/controllers/theme_controller.dart';
 
 class BlockchainScreen extends StatefulWidget {
   const BlockchainScreen({super.key});
@@ -18,8 +20,9 @@ class _BlockchainScreenState extends State<BlockchainScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.sizeOf(context).height;
+    final ThemeController themeController = Get.find<ThemeController>();
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: themeController.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -30,11 +33,7 @@ class _BlockchainScreenState extends State<BlockchainScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
-                    colors: [
-                      const Color.fromARGB(255, 30, 144, 133),
-                      const Color.fromARGB(255, 103, 101, 91),
-                      const Color.fromARGB(255, 211, 180, 39),
-                    ],
+                    colors: themeController.gradientColors,
                   ),
                 ),
                 child: Padding(
@@ -65,7 +64,9 @@ class _BlockchainScreenState extends State<BlockchainScreen> {
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: BoxDecoration(
+                  color: themeController.contentBackgroundColor,
+                ),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: SizedBox(
@@ -80,8 +81,8 @@ class _BlockchainScreenState extends State<BlockchainScreen> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade400),
+                        color: themeController.cardColor,
+                        border: Border.all(color: themeController.borderColor),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
@@ -92,26 +93,31 @@ class _BlockchainScreenState extends State<BlockchainScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade600,
+                              color: themeController.textColor,
                             ),
                           ),
                           const SizedBox(height: 8),
                           TextField(
                             controller: urlController,
-                            style: TextStyle(color: Colors.grey.shade600),
+                            style: TextStyle(color: themeController.textColor),
                             decoration: InputDecoration(
-                              hintText:
-                                  'https://example.com/blockchain',
+                              hintText: 'https://example.com/blockchain',
                               filled: true,
-                              fillColor: Colors.white,
-                              hintStyle: TextStyle(color: Colors.grey.shade600),
+                              fillColor: themeController.cardColor,
+                              hintStyle: TextStyle(
+                                color: themeController.subtitleColor,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.grey.shade400),
+                                borderSide: BorderSide(
+                                  color: themeController.borderColor,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.grey.shade600),
+                                borderSide: BorderSide(
+                                  color: themeController.subtitleColor,
+                                ),
                               ),
                             ),
                           ),

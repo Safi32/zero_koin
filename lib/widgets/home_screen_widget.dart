@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreenWidget extends StatelessWidget {
   const HomeScreenWidget({
@@ -14,41 +15,67 @@ class HomeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      height: screenHeight * 0.1,
-      width: screenWidth * 0.42,
+      height: 64,
+      width: 183,
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border.all(color: Colors.white),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         child: Row(
           children: [
-            Image.asset(imageURl),
-            SizedBox(width: screenWidth * 0.01),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.05,
-                    color: Colors.white,
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: imageURl.toLowerCase().endsWith('.svg')
+                  ? (imageURl.contains('tabler_battery-2-filled') ||
+                      imageURl.contains('Group (1).svg') ||
+                      imageURl.contains('Vector (7).svg')
+                      ? SvgPicture.asset(
+                          imageURl,
+                          fit: BoxFit.contain,
+                        )
+                      : SvgPicture.asset(
+                          imageURl,
+                          fit: BoxFit.contain,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ))
+                  : Image.asset(imageURl, fit: BoxFit.contain),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                ),
-                Text(
-                  subTitle,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.03,
-                    color: Colors.white,
+                  SizedBox(height: 1),
+                  Text(
+                    subTitle,
+                    style: TextStyle(
+                      fontSize: 15.44,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
