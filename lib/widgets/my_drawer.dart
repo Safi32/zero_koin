@@ -16,6 +16,8 @@ import 'package:zero_koin/view/zerokoin_buy.dart';
 import 'package:zero_koin/widgets/drawer_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zero_koin/services/auth_service.dart';
+import 'package:zero_koin/view/user_registeration_screen.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -25,6 +27,7 @@ class MyDrawer extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final ThemeController themeController = Get.find<ThemeController>();
+    final AuthService authService = AuthService.instance;
 
     return SizedBox(
       width: screenWidth * 0.65,
@@ -63,58 +66,120 @@ class MyDrawer extends StatelessWidget {
                               ),
                               child: Row(
                                 children: [
-                                  Container(
+                                  Obx(() => Container(
                                     height: 36,
                                     width: 36,
                                     decoration: BoxDecoration(
                                       color: Color(0xFF086F8A),
                                       borderRadius: BorderRadius.circular(36),
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        "W",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                    child: authService.userPhotoURL != null
+                                        ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(36),
+                                            child: Image.network(
+                                              authService.userPhotoURL!,
+                                              height: 36,
+                                              width: 36,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Center(
+                                                  child: Text(
+                                                    _getInitials(authService.userDisplayName ?? 'User'),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        : Center(
+                                            child: Text(
+                                              _getInitials(authService.userDisplayName ?? 'User'),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                  )),
                                   SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "John",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: screenHeight * 0.018,
-                                        ),
-                                      ),
-                                      Text(
-                                        "xyz@gmail.com",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: screenHeight * 0.016,
-                                        ),
-                                      ),
-                                    ],
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Obx(() => Text(
+                                          authService.userDisplayName ?? 'User',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: screenHeight * 0.018,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
+                                        Obx(() => Text(
+                                          authService.userEmail ?? 'No email',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: screenHeight * 0.016,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
+                                      ],
+                                    ),
                                   ),
                                   Spacer(),
-                                  Container(
-                                    height: 36,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF0882A2),
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        "assets/logout.svg",
-                                        width: 22,
-                                        height: 20,
+                                  GestureDetector(
+                                    onTap: () async {
+                                      final ThemeController themeController = Get.find<ThemeController>();
+                                      // Show confirmation dialog
+                                      final shouldLogout = await Get.dialog<bool>(
+                                        AlertDialog(
+                                          backgroundColor: themeController.cardColor,
+                                          title: Text(
+                                            'Sign Out',
+                                            style: TextStyle(color: themeController.textColor),
+                                          ),
+                                          content: Text(
+                                            'Are you sure you want to sign out?',
+                                            style: TextStyle(color: themeController.subtitleColor),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Get.back(result: false),
+                                              child: Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Get.back(result: true),
+                                              child: Text('Sign Out'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      
+                                      if (shouldLogout == true) {
+                                        await authService.signOut();
+                                        // Navigate to registration screen
+                                        Get.offAll(() => const UserRegisterationScreen());
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 36,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF0882A2),
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          "assets/logout.svg",
+                                          width: 22,
+                                          height: 20,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -242,5 +307,16 @@ class MyDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getInitials(String name) {
+    if (name.isEmpty) return 'U';
+    
+    List<String> nameParts = name.split(' ');
+    if (nameParts.length >= 2) {
+      return '${nameParts[0][0]}${nameParts[1][0]}'.toUpperCase();
+    } else {
+      return nameParts[0][0].toUpperCase();
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/constant/app_colors.dart';
 import 'package:zero_koin/view/bottom_bar.dart';
+import 'package:zero_koin/services/auth_service.dart';
 
 class SignInSuccessful extends StatefulWidget {
   const SignInSuccessful({super.key});
@@ -46,6 +47,7 @@ class _SignInSuccessfulState extends State<SignInSuccessful>
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final AuthService authService = AuthService.instance;
 
     return Scaffold(
       body: Stack(
@@ -93,24 +95,24 @@ class _SignInSuccessfulState extends State<SignInSuccessful>
                           width: screenWidth * 0.2,
                         ),
                         SizedBox(height: screenHeight * 0.02),
-                        Text(
-                          'Sign In \n Successful',
+                        Obx(() => Text(
+                          'Welcome Back,\n${authService.userDisplayName?.split(' ').first ?? 'User'}!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: screenWidth * 0.055,
                             fontWeight: FontWeight.bold,
                             color: AppColors.blue,
                           ),
-                        ),
+                        )),
                         SizedBox(height: screenHeight * 0.015),
-                        Text(
-                          'Please wait... \n You will be directed to the homepage soon.',
+                        Obx(() => Text(
+                          'Successfully signed in as ${authService.userEmail ?? 'user'}\nYou will be directed to the homepage soon.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: screenWidth * 0.028,
                             color: Colors.black54,
                           ),
-                        ),
+                        )),
                       ],
                     ),
                   ),

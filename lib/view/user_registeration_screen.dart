@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zero_koin/view/sign_in_successful.dart';
+import 'package:zero_koin/services/auth_service.dart';
 
 class UserRegisterationScreen extends StatelessWidget {
   const UserRegisterationScreen({super.key});
@@ -75,16 +76,12 @@ class UserRegisterationScreen extends StatelessWidget {
                                     recognizer:
                                         TapGestureRecognizer()
                                           ..onTap = () async {
-                                            const String urlString =
-                                                'https://google.com';
+                                            final Uri url = Uri.parse('https://google.com');
                                             try {
-                                              if (await url_launcher.canLaunch(
-                                                urlString,
-                                              )) {
-                                                await url_launcher.launch(
-                                                  urlString,
-                                                  forceSafariVC: false,
-                                                  forceWebView: false,
+                                              if (await canLaunchUrl(url)) {
+                                                await launchUrl(
+                                                  url,
+                                                  mode: LaunchMode.externalApplication,
                                                 );
                                               }
                                             } catch (e) {
@@ -98,8 +95,15 @@ class UserRegisterationScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             ElevatedButton.icon(
-                              onPressed: () {
-                                Get.to(() => const SignInSuccessful());
+                              onPressed: () async {
+                                final authService = AuthService.instance;
+                                final result = await authService.signInWithGoogle();
+                                
+                                if (result != null) {
+                                  // Successfully signed in, navigate to success screen
+                                  Get.to(() => const SignInSuccessful());
+                                }
+                                // If result is null, error handling is already done in AuthService
                               },
                               icon: Image.asset(
                                 "assets/google_icon.png",
