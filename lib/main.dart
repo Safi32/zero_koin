@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
+import 'package:zero_koin/services/auth_service.dart';
 import 'package:zero_koin/view/splash_screen.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase only if not already initialized
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   // Initialize ThemeController
   Get.put(ThemeController());
+
+  // Initialize AuthService
+  Get.put(AuthService());
 
   // Set status bar to light content (white text/icons)
   SystemChrome.setSystemUIOverlayStyle(

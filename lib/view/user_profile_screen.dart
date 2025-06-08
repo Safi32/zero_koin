@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
 import 'package:zero_koin/view/bottom_bar.dart';
+import 'package:zero_koin/services/auth_service.dart';
+import 'package:zero_koin/view/user_registeration_screen.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/my_drawer.dart';
@@ -57,6 +59,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final ThemeController themeController = Get.find<ThemeController>();
+    final AuthService authService = AuthService.instance;
     return Scaffold(
       drawer: MyDrawer(),
       body: Stack(
@@ -148,14 +151,38 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             50,
                                           ),
                                         ),
-                                        child: Center(
-                                          child: Text(
-                                            "W",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 30,
-                                            ),
-                                          ),
+                                        child: Obx(() => authService.userPhotoURL != null
+                                            ? ClipRRect(
+                                                borderRadius: BorderRadius.circular(50),
+                                                child: Image.network(
+                                                  authService.userPhotoURL!,
+                                                  height: 50,
+                                                  width: 50,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return Center(
+                                                      child: Text(
+                                                        _getInitials(authService.userDisplayName ?? 'User'),
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 20,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                            : Center(
+                                                child: Text(
+                                                  _getInitials(authService.userDisplayName ?? 'User'),
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
                                         ),
                                       ),
                                       SizedBox(width: 20),
@@ -163,36 +190,71 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            "John",
+                                          Obx(() => Text(
+                                            authService.userDisplayName ?? 'User',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15,
                                             ),
-                                          ),
-                                          Text(
-                                            "xyz@gmail.com",
+                                          )),
+                                          Obx(() => Text(
+                                            authService.userEmail ?? 'No email',
                                             style: TextStyle(
                                               color: Color(0xFFC4C9D5),
                                               fontSize: 15,
                                             ),
-                                          ),
+                                          )),
                                         ],
                                       ),
                                       Spacer(),
-                                      Container(
-                                        height: 50,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFF0882A2),
-                                          borderRadius: BorderRadius.circular(25.12),
-                                        ),
-                                        child: Center(
-                                          child: SvgPicture.asset(
-                                            "assets/logout.svg",
-                                            width: 34,
-                                            height: 30,
+                                      GestureDetector(
+                                        onTap: () async {
+                                          final ThemeController themeController = Get.find<ThemeController>();
+                                          // Show confirmation dialog
+                                          final shouldLogout = await Get.dialog<bool>(
+                                            AlertDialog(
+                                              backgroundColor: themeController.cardColor,
+                                              title: Text(
+                                                'Sign Out',
+                                                style: TextStyle(color: themeController.textColor),
+                                              ),
+                                              content: Text(
+                                                'Are you sure you want to sign out?',
+                                                style: TextStyle(color: themeController.subtitleColor),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Get.back(result: false),
+                                                  child: Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Get.back(result: true),
+                                                  child: Text('Sign Out'),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                          
+                                          if (shouldLogout == true) {
+                                            await authService.signOut();
+                                            // Navigate to registration screen
+                                            Get.offAll(() => const UserRegisterationScreen());
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 80,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF0882A2),
+                                            borderRadius: BorderRadius.circular(25.12),
+                                          ),
+                                          child: Center(
+                                            child: SvgPicture.asset(
+                                              "assets/logout.svg",
+                                              width: 34,
+                                              height: 30,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -235,11 +297,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             children: [
                               WalletPageWidget(
                                 title: "Created On",
-                                subtitle: "25 Apr 2025",
+                                subtitle: authService.userCreationDate ?? 'Unknown',
                               ),
                               WalletPageWidget(
                                 title: "Last Sign In",
-                                subtitle: "1 hour ago",
+                                subtitle: authService.userLastSignInTime ?? 'Unknown',
                               ),
                             ],
                           ),
@@ -347,5 +409,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ],
       ),
     );
+  }
+
+  String _getInitials(String name) {
+    if (name.isEmpty) return 'U';
+    
+    List<String> nameParts = name.split(' ');
+    if (nameParts.length >= 2) {
+      return '${nameParts[0][0]}${nameParts[1][0]}'.toUpperCase();
+    } else {
+      return nameParts[0][0].toUpperCase();
+    }
   }
 }
