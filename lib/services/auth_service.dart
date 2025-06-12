@@ -73,6 +73,7 @@ class AuthService extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 2),
         backgroundColor: const Color(0xFF086F8A),
+        colorText: Colors.white,
       );
 
       return userCredential;
@@ -86,6 +87,7 @@ class AuthService extends GetxController {
         'Failed to sign in with Google: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 3),
+        colorText: Colors.white,
       );
       
       // Log error for debugging
@@ -122,6 +124,7 @@ class AuthService extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 2),
         backgroundColor: const Color(0xFF086F8A),
+        colorText: Colors.white,
       );
       
     } catch (e) {
@@ -133,6 +136,7 @@ class AuthService extends GetxController {
         'Failed to sign out: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 3),
+        colorText: Colors.white,
       );
       
       // Log error for debugging
@@ -245,6 +249,7 @@ class AuthService extends GetxController {
           'Error',
           'Reauthentication failed. Please try again.',
           snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
         );
         return false;
       }
@@ -268,6 +273,7 @@ class AuthService extends GetxController {
         'Error',
         'Failed to delete account: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
       );
       
       // Log error for debugging

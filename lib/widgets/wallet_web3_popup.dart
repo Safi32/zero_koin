@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:zero_koin/widgets/wallet_web3_widget.dart';
 
 class WalletWeb3Popup extends StatefulWidget {
-  const WalletWeb3Popup({super.key});
+  final VoidCallback? onMetaMaskConnect;
+  final VoidCallback? onTrustWalletConnect;
+  final bool isConnecting;
+
+  const WalletWeb3Popup({
+    super.key,
+    this.onMetaMaskConnect,
+    this.onTrustWalletConnect,
+    this.isConnecting = false,
+  });
 
   @override
   State<WalletWeb3Popup> createState() => _WalletWeb3PopupState();
@@ -13,8 +22,6 @@ class _WalletWeb3PopupState extends State<WalletWeb3Popup> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
       width: 360,
@@ -41,10 +48,17 @@ class _WalletWeb3PopupState extends State<WalletWeb3Popup> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               GestureDetector(
-                onTap: () {
+                onTap: widget.isConnecting ? null : () async {
                   setState(() {
                     selectedWallet = 'trustwallet';
                   });
+
+                  // Call the Trust Wallet connection function
+                  if (widget.onTrustWalletConnect != null) {
+                    widget.onTrustWalletConnect!();
+                    // Close the popup after initiating connection
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: WalletWeb3Widget(
                   containerColor:
@@ -52,16 +66,23 @@ class _WalletWeb3PopupState extends State<WalletWeb3Popup> {
                           ? Color(0xFF0682A2)
                           : Color(0xFF393746),
                   imageUrl: "assets/trust.png",
-                  text: "CONNECT-TRUSTWALLET",
+                  text: widget.isConnecting ? "CONNECTING..." : "CONNECT-TRUSTWALLET",
                   fontSize: 18,
                 ),
               ),
               SizedBox(height: 4),
               GestureDetector(
-                onTap: () {
+                onTap: widget.isConnecting ? null : () async {
                   setState(() {
                     selectedWallet = 'metamask';
                   });
+
+                  // Call the MetaMask connection function
+                  if (widget.onMetaMaskConnect != null) {
+                    widget.onMetaMaskConnect!();
+                    // Close the popup after initiating connection
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: WalletWeb3Widget(
                   containerColor:
@@ -69,7 +90,7 @@ class _WalletWeb3PopupState extends State<WalletWeb3Popup> {
                           ? Color(0xFF0682A2)
                           : Color(0xFF393746),
                   imageUrl: "assets/icon-metamask.png",
-                  text: "CONNECT-METAMASK",
+                  text: widget.isConnecting ? "CONNECTING..." : "CONNECT-METAMASK",
                   fontSize: 20,
                 ),
               ),

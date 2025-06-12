@@ -86,7 +86,7 @@ class EarnRewards extends StatelessWidget {
                   height: buttonHeight, // Responsive button height
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.lightBlue,
+                      backgroundColor: const Color(0xFF0682A2),
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(
                         horizontal: buttonHorizontalPadding,

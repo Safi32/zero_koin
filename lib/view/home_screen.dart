@@ -3,19 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
+import 'package:zero_koin/controllers/user_controller.dart';
+import 'package:zero_koin/controllers/admob_controller.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:zero_koin/view/invite_user_screen.dart';
 import 'package:zero_koin/view/rewards_screen.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/earn_rewards.dart';
-import 'package:zero_koin/widgets/gift_popup.dart';
+
 import 'package:zero_koin/widgets/home_page_widgets.dart';
 import 'package:zero_koin/widgets/home_screen_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:zero_koin/widgets/my_drawer.dart';
-import 'package:zero_koin/widgets/progress_popup.dart';
+
 import 'package:zero_koin/widgets/session_popup.dart';
-import 'package:zero_koin/widgets/timer_popup.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
 
@@ -27,6 +30,8 @@ class HomeScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final ThemeController themeController = Get.find<ThemeController>();
+    final UserController userController = Get.find<UserController>();
+    final AdMobController adMobController = Get.find<AdMobController>();
 
     // Ensure status bar content is white
     SystemChrome.setSystemUIOverlayStyle(
@@ -65,23 +70,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
-                                        ),
-                                        child: Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          child: SessionPopup(),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
+                                onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "Mining",
                                   subTitle: "500",
@@ -92,23 +81,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(width: 20.0),
                             Expanded(
                               child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
-                                        ),
-                                        child: Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          child: GiftPopup(),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
+                                onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "References",
                                   subTitle: "100",
@@ -127,23 +100,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
-                                        ),
-                                        child: Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          child: TimerPopup(),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
+                                onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "Referrals",
                                   subTitle: "10",
@@ -197,13 +154,68 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    DottedBorder(
-                                      options: RectDottedBorderOptions(
-                                        dashPattern: [10, 5],
-                                        strokeWidth: 2,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
+                                    // AdMob Banner Ad Section
+                                    Obx(() {
+                                      if (adMobController.isAdLoading) {
+                                        return Container(
+                                          width: 320,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: themeController.cardColor,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              color: themeController.textColor,
+                                            ),
+                                          ),
+                                        );
+                                      } else if (adMobController.isBannerAdReady && adMobController.bannerAd != null) {
+                                        return Container(
+                                          width: adMobController.bannerAd!.size.width.toDouble(),
+                                          height: adMobController.bannerAd!.size.height.toDouble(),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.transparent,
+                                          ),
+                                          child: AdWidget(ad: adMobController.bannerAd!),
+                                        );
+                                      } else {
+                                        return DottedBorder(
+                                          options: RectDottedBorderOptions(
+                                            dashPattern: [10, 5],
+                                            strokeWidth: 2,
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              adMobController.reloadBannerAd();
+                                            },
+                                            child: Container(
+                                              width: 320,
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                color: themeController.cardColor,
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "Tap to Load Ad",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: screenHeight * 0.02,
+                                                    color: themeController.textColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }),
+                                    SizedBox(height: 14),
+                                    Obx(
+                                      () => HomePageWidgets(
+                                        onPressed: () {
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
@@ -213,46 +225,20 @@ class HomeScreen extends StatelessWidget {
                                                   sigmaY: 5.0,
                                                 ),
                                                 child: Dialog(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  child: ProgressPopup(),
+                                                  backgroundColor: Colors.transparent,
+                                                  child: SessionPopup(),
                                                 ),
                                               );
                                             },
                                           );
                                         },
-                                        child: Container(
-                                          width: 320,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color: themeController.cardColor,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              "Upload An Add",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: screenHeight * 0.02,
-                                                color:
-                                                    themeController.textColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        title: "Total ZEROKOIN",
+                                        subtitle: userController.balance.value.toString(),
+                                        imageURL: "assets/zerokoingold.png",
+                                        buttonImage: "assets/solar_play-bold.svg",
+                                        buttonText: "Start",
+                                        color: const Color(0xFF007B1F),
                                       ),
-                                    ),
-                                    SizedBox(height: 14),
-                                    HomePageWidgets(
-                                      onPressed: () {},
-                                      title: "Total ZEROKOIN",
-                                      subtitle: "600",
-                                      imageURL: "assets/zerokoingold.png",
-                                      buttonImage: "assets/solar_play-bold.svg",
-                                      buttonText: "Start",
-                                      color: const Color(0xFF007B1F),
                                     ),
                                     SizedBox(height: 10),
                                     HomePageWidgets(

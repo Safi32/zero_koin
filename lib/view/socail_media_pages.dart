@@ -253,11 +253,16 @@ class _SocailMediaPagesState extends State<SocailMediaPages> {
                             children: [
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Telegram.svg',
+                                socialMediaUrl: 'https://t.me/zerokoinapp',
                               ),
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Discord.svg',
+                                socialMediaUrl: 'https://discord.gg/zerokoin',
                               ),
-                              SocailMediaWidgets(imageUrl: 'assets/X.svg'),
+                              SocailMediaWidgets(
+                                imageUrl: 'assets/X.svg',
+                                socialMediaUrl: 'https://x.com/zerokoinapp',
+                              ),
                             ],
                           ),
                           SizedBox(height: 50),
@@ -266,12 +271,15 @@ class _SocailMediaPagesState extends State<SocailMediaPages> {
                             children: [
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Facebook.svg',
+                                socialMediaUrl: 'https://facebook.com/zerokoinapp',
                               ),
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Instagram.svg',
+                                socialMediaUrl: 'https://www.instagram.com/zerokoinapp?igsh=eDU2aHVwMGtqc2Vj',
                               ),
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Whatsapp.svg',
+                                socialMediaUrl: 'https://whatsapp.com/channel/0029VbAvkVc1iUxStQFiCG1d',
                               ),
                             ],
                           ),

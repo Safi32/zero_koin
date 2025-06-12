@@ -1,7 +1,130 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProgressPopup extends StatelessWidget {
-  const ProgressPopup({super.key});
+class ProgressPopup extends StatefulWidget {
+  final int sessionIndex;
+  const ProgressPopup({super.key, this.sessionIndex = 1});
+
+  @override
+  State<ProgressPopup> createState() => _ProgressPopupState();
+}
+
+class _ProgressPopupState extends State<ProgressPopup> {
+  Timer? _timer;
+  int _remainingSeconds = 5; // 5 seconds for testing
+  bool _isTimerRunning = false;
+  bool _isClaimed = false;
+  static const int _totalSeconds = 5; // 5 seconds total
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTimerState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadTimerState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedEndTime = prefs.getInt('session_${widget.sessionIndex}_timer_end_time');
+    final claimed = prefs.getBool('session_${widget.sessionIndex}_claimed') ?? false;
+
+    setState(() {
+      _isClaimed = claimed;
+    });
+
+    if (savedEndTime != null && !claimed) {
+      final currentTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      final remaining = savedEndTime - currentTime;
+
+      if (remaining > 0) {
+        setState(() {
+          _remainingSeconds = remaining;
+          _isTimerRunning = true;
+        });
+        _startTimer();
+      } else {
+        // Timer has expired, can be claimed
+        setState(() {
+          _remainingSeconds = 0;
+          _isTimerRunning = false;
+        });
+      }
+    } else if (!claimed) {
+      // No saved timer and not claimed, start a new timer automatically
+      _startTimer();
+    }
+  }
+
+  void _startTimer() {
+    if (!_isTimerRunning && _remainingSeconds > 0 && !_isClaimed) {
+      setState(() {
+        _isTimerRunning = true;
+      });
+      _saveTimerState();
+
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          if (_remainingSeconds > 0) {
+            _remainingSeconds--;
+          } else {
+            _stopTimer();
+          }
+        });
+      });
+    }
+  }
+
+  void _stopTimer() {
+    setState(() {
+      _isTimerRunning = false;
+    });
+    _timer?.cancel();
+    _saveTimerState();
+  }
+
+  Future<void> _saveTimerState() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_isTimerRunning && _remainingSeconds > 0) {
+      final endTime = (DateTime.now().millisecondsSinceEpoch ~/ 1000) + _remainingSeconds;
+      await prefs.setInt('session_${widget.sessionIndex}_timer_end_time', endTime);
+    }
+    await prefs.setBool('session_${widget.sessionIndex}_claimed', _isClaimed);
+  }
+
+  String _formatTime(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    if (hours > 0) {
+      return '${hours}HR ${minutes}MIN Remaining';
+    } else {
+      return '${minutes}MIN Remaining';
+    }
+  }
+
+  String get _statusText {
+    if (_isClaimed) {
+      return 'Claimed';
+    } else if (_remainingSeconds == 0) {
+      return 'Ready to Claim';
+    } else {
+      return 'Progress';
+    }
+  }
+
+  String get _timeText {
+    // Always show the timer countdown, regardless of claimed status
+    if (_remainingSeconds == 0) {
+      return 'Timer Complete';
+    } else {
+      return _formatTime(_remainingSeconds);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +234,7 @@ class ProgressPopup extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Session 1",
+                            "Session ${widget.sessionIndex}",
                             style: TextStyle(
                               fontSize: headerFontSize, // Responsive font size
                               fontWeight: FontWeight.w900,
@@ -165,7 +288,7 @@ class ProgressPopup extends StatelessWidget {
                                 ),
                                 SizedBox(height: spacing3), // Responsive spacing
                                 Text(
-                                  "Progress",
+                                  _statusText,
                                   style: TextStyle(
                                     fontSize: bodyFontSize, // Responsive font size
                                     fontWeight: FontWeight.w900,
@@ -191,7 +314,7 @@ class ProgressPopup extends StatelessWidget {
                                 ),
                                 SizedBox(height: spacing3), // Responsive spacing
                                 Text(
-                                  "2 Hours Remaining",
+                                  _timeText,
                                   style: TextStyle(
                                     fontSize: bodyFontSize, // Responsive font size
                                     fontWeight: FontWeight.w900,

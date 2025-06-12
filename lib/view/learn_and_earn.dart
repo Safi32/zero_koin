@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/controller/language_controller.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
+import 'package:zero_koin/controllers/admob_controller.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:zero_koin/view/bottom_bar.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/learn_and_earn_widget.dart';
 import 'package:zero_koin/widgets/my_drawer.dart';
-import 'package:zero_koin/widgets/progress_popup.dart';
+
 import 'package:zero_koin/widgets/earn_rewards.dart';
 
 class LearnAndEarn extends StatefulWidget {
@@ -134,6 +136,7 @@ class _LearnAndEarnState extends State<LearnAndEarn> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final ThemeController themeController = Get.find<ThemeController>();
+    final AdMobController adMobController = Get.find<AdMobController>();
 
     final LanguageController controller = Get.put(LanguageController());
 
@@ -185,54 +188,69 @@ class _LearnAndEarnState extends State<LearnAndEarn> {
                       ],
                     ),
                     const SizedBox(height: 15),
-                    DottedBorder(
-                      options: const RectDottedBorderOptions(
-                        color: Colors.grey,
-                        dashPattern: [10, 5],
-                        strokeWidth: 2,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return BackdropFilter(
-                                filter: ImageFilter.blur(
-                                  sigmaX: 5.0,
-                                  sigmaY: 5.0,
-                                ),
-                                child: const Dialog(
-                                  backgroundColor: Colors.transparent,
-                                  child: ProgressPopup(),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Obx(
-                          () => Container(
-                            width: 320,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: themeController.cardColor,
-                              borderRadius: BorderRadius.circular(10),
+                    // AdMob Banner Ad Section for Learn & Earn
+                    Obx(() {
+                      if (adMobController.isLearnEarnAdLoading) {
+                        return Container(
+                          width: 320,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: themeController.cardColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: themeController.textColor,
                             ),
-                            child: Center(
-                              child: Obx(
-                                () => Text(
-                                  controller.getTranslation("upload_an_add"),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: screenHeight * 0.02,
-                                    color: themeController.textColor,
+                          ),
+                        );
+                      } else if (adMobController.isLearnEarnBannerAdReady && adMobController.learnEarnBannerAd != null) {
+                        return Container(
+                          width: adMobController.learnEarnBannerAd!.size.width.toDouble(),
+                          height: adMobController.learnEarnBannerAd!.size.height.toDouble(),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.transparent,
+                          ),
+                          child: AdWidget(ad: adMobController.learnEarnBannerAd!),
+                        );
+                      } else {
+                        return DottedBorder(
+                          options: const RectDottedBorderOptions(
+                            color: Colors.grey,
+                            dashPattern: [10, 5],
+                            strokeWidth: 2,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              adMobController.reloadLearnEarnBannerAd();
+                            },
+                            child: Obx(
+                              () => Container(
+                                width: 320,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: themeController.cardColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                  child: Obx(
+                                    () => Text(
+                                      controller.getTranslation("upload_an_add"),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenHeight * 0.02,
+                                        color: themeController.textColor,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),
