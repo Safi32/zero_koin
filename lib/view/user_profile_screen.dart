@@ -295,9 +295,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              WalletPageWidget(
-                                title: "Created On",
-                                subtitle: authService.userCreationDate ?? 'Unknown',
+                              FutureBuilder<String?>(
+                                future: authService.userCreationDate,
+                                builder: (context, snapshot) {
+                                  return WalletPageWidget(
+                                    title: "Created On",
+                                    subtitle: snapshot.data ?? 'Loading...',
+                                  );
+                                },
                               ),
                               WalletPageWidget(
                                 title: "Last Sign In",

@@ -1,11 +1,11 @@
 {
-    "name": "zero_koin",
-    "short_name": "zero_koin",
+    "name": "Zero Koin Learn & Earn Crypto",
+    "short_name": "Zero Koin",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Zero Koin Learn & Earn Crypto",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

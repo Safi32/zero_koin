@@ -1,9 +1,7 @@
 import 'dart:ui';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get.dart';
 
 import 'package:zero_koin/view/guide_screen.dart';
@@ -43,13 +41,9 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
   bool _waitingForWalletReturn = false;
   String _currentWalletType = ''; // Track which wallet is being connected
   final TextEditingController _walletAddressController = TextEditingController();
-  final TextEditingController _withdrawalAmountController = TextEditingController();
 
   // User controller for persistent storage
   final UserController _userController = UserController.instance;
-
-  // Validation states
-  String? _withdrawalAmountError;
 
   @override
   void initState() {
@@ -80,7 +74,6 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _walletAddressController.dispose();
-    _withdrawalAmountController.dispose();
     super.dispose();
   }
 
@@ -484,33 +477,7 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
 
 
 
-  // Validation methods
-  void _validateWithdrawalAmount(String value) {
-    setState(() {
-      if (value.isEmpty) {
-        _withdrawalAmountError = null;
-        return;
-      }
 
-      final amount = int.tryParse(value);
-      if (amount == null) {
-        _withdrawalAmountError = 'Please enter a valid number';
-        return;
-      }
-
-      if (amount <= 0) {
-        _withdrawalAmountError = 'Amount must be greater than 0';
-        return;
-      }
-
-      final userBalance = _userController.balance.value;
-      if (amount > userBalance) {
-        _withdrawalAmountError = 'Insufficient balance';
-      } else {
-        _withdrawalAmountError = null;
-      }
-    });
-  }
 
   void _handleWithdraw() {
     final userBalance = _userController.balance.value;
@@ -520,29 +487,8 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
       return;
     }
 
-    final amount = int.tryParse(_withdrawalAmountController.text);
-    if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid withdrawal amount'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    if (amount > userBalance) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Insufficient balance for withdrawal'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    // Proceed with withdrawal
-    _showWithdrawalSuccessDialog(amount);
+    // Proceed with withdrawal of full balance
+    _showWithdrawalSuccessDialog(userBalance);
   }
 
   void _showBalanceRequirementDialog() {
@@ -610,7 +556,7 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
             child: Column(
               children: [
                 AppBarContainer(
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                   showTotalPosition: false,
                 ),
                 Padding(
@@ -674,69 +620,108 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        SizedBox(
-                                          width: screenWidth * 0.6,
-                                          height: screenHeight * 0.06,
-                                          child: TextFormField(
-                                            controller: _withdrawalAmountController,
-                                            keyboardType: TextInputType.number,
-                                            onChanged: _validateWithdrawalAmount,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                            decoration: InputDecoration(
-                                              hintText: "0",
-                                              hintStyle: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.transparent,
-                                              prefixIcon: Padding(
-                                                padding: const EdgeInsets.all(
-                                                  10,
+                                        Obx(() {
+                                          final userBalance = _userController.balance.value;
+                                          return SizedBox(
+                                            width: screenWidth * 0.6,
+                                            height: screenHeight * 0.06,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                  width: 2,
                                                 ),
-                                                child: Image.asset(
-                                                  "assets/zerokoingold.png",
-                                                ),
+                                                color: Colors.transparent,
                                               ),
-                                              prefixIconConstraints:
-                                                  BoxConstraints(
-                                                    minWidth: 40,
-                                                    minHeight: 40,
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(10),
+                                                    child: Image.asset(
+                                                      "assets/zerokoingold.png",
+                                                    ),
                                                   ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                  color: _withdrawalAmountError != null ? Colors.red : Colors.white,
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                  color: _withdrawalAmountError != null ? Colors.red : Colors.grey,
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                  color: Colors.red,
-                                                  width: 2,
-                                                ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      userBalance.toString(),
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        Image(
-                                          image: AssetImage(
-                                            "assets/loading.png",
-                                          ),
-                                        ),
+                                          );
+                                        }),
+                                        Obx(() {
+                                          final userBalance = _userController.balance.value;
+                                          final maxBalance = 4000;
+                                          final percentage = userBalance >= maxBalance
+                                              ? 100
+                                              : (userBalance / maxBalance * 100).round();
+                                          final progress = userBalance >= maxBalance
+                                              ? 1.0
+                                              : userBalance / maxBalance;
+
+                                          return SizedBox(
+                                            width: 60,
+                                            height: 60,
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                // Background circle
+                                                SizedBox(
+                                                  width: 60,
+                                                  height: 60,
+                                                  child: CircularProgressIndicator(
+                                                    value: 1.0,
+                                                    strokeWidth: 8,
+                                                    backgroundColor: Colors.transparent,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                                      Colors.grey.withValues(alpha: 0.3),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // Progress circle with gradient effect
+                                                SizedBox(
+                                                  width: 60,
+                                                  height: 60,
+                                                  child: CustomPaint(
+                                                    painter: GradientCircularProgressPainter(
+                                                      progress: progress,
+                                                      strokeWidth: 8,
+                                                      startColor: Color(0xFF0682A2), // Cyan/Teal
+                                                      endColor: Color(0xFFC5C113), // Yellow-Green
+                                                      backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // Percentage text
+                                                Container(
+                                                  width: 48,
+                                                  height: 48,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.transparent,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      '$percentage%',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }),
                                       ],
                                     ),
                                     SizedBox(height: 10),
@@ -755,7 +740,7 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
                                         children: [
                                           TextSpan(
                                             text:
-                                                "When the Withdrawal Pool is 100% a box will be opened in this area for you to withdraw your wallet balance. Please type your Zerokoin (Web 3) wallet ",
+                                                "When the Withdrawal Pool is 100% you can withdraw your full wallet balance. Please connect your Zerokoin (Web 3) wallet ",
                                           ),
                                           WidgetSpan(
                                             alignment:
@@ -770,7 +755,10 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
                                                 ),
                                                 child: SvgPicture.asset(
                                                   "assets/Info Icon.svg",
-                                                  color: Color(0xFF0682A2),
+                                                  colorFilter: ColorFilter.mode(
+                                                    Color(0xFF0682A2),
+                                                    BlendMode.srcIn,
+                                                  ),
                                                   height: 20,
                                                   width: 20,
                                                 ),
@@ -995,5 +983,71 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
         ],
       ),
     );
+  }
+}
+
+class GradientCircularProgressPainter extends CustomPainter {
+  final double progress;
+  final double strokeWidth;
+  final Color startColor;
+  final Color endColor;
+  final Color backgroundColor;
+
+  GradientCircularProgressPainter({
+    required this.progress,
+    required this.strokeWidth,
+    required this.startColor,
+    required this.endColor,
+    required this.backgroundColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+
+    // Draw background circle
+    final backgroundPaint = Paint()
+      ..color = backgroundColor
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(center, radius, backgroundPaint);
+
+    // Draw progress arc with gradient
+    if (progress > 0) {
+      final rect = Rect.fromCircle(center: center, radius: radius);
+      final gradient = SweepGradient(
+        startAngle: -math.pi / 2, // Start from top
+        endAngle: -math.pi / 2 + (2 * math.pi * progress), // End based on progress
+        colors: [startColor, endColor],
+        stops: [0.0, 1.0],
+      );
+
+      final progressPaint = Paint()
+        ..shader = gradient.createShader(rect)
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+
+      canvas.drawArc(
+        rect,
+        -math.pi / 2, // Start angle (top)
+        2 * math.pi * progress, // Sweep angle based on progress
+        false,
+        progressPaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return oldDelegate is! GradientCircularProgressPainter ||
+        oldDelegate.progress != progress ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.startColor != startColor ||
+        oldDelegate.endColor != endColor ||
+        oldDelegate.backgroundColor != backgroundColor;
   }
 }

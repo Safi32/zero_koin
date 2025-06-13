@@ -159,12 +159,31 @@ class AuthService extends GetxController {
   String? get userId => currentUser?.uid;
   
   // Get formatted user creation date
-  String? get userCreationDate {
-    final creationTime = currentUser?.metadata.creationTime;
-    if (creationTime == null) return null;
-    
-    final formatter = DateFormat('dd MMM yyyy');
-    return formatter.format(creationTime);
+  Future<String?> get userCreationDate async {
+    try {
+      final profile = await ApiService.getUserProfile();
+      if (profile != null && profile['createdAt'] != null) {
+        final createdAt = DateTime.parse(profile['createdAt']);
+        final formatter = DateFormat('dd MMM yyyy');
+        return formatter.format(createdAt);
+      }
+      // Fallback to Firebase metadata if MongoDB data is not available
+      final creationTime = currentUser?.metadata.creationTime;
+      if (creationTime == null) return null;
+      
+      final formatter = DateFormat('dd MMM yyyy');
+      return formatter.format(creationTime);
+    } catch (e) {
+      if (Get.isLogEnable) {
+        print('Error getting user creation date: $e');
+      }
+      // Fallback to Firebase metadata if there's an error
+      final creationTime = currentUser?.metadata.creationTime;
+      if (creationTime == null) return null;
+      
+      final formatter = DateFormat('dd MMM yyyy');
+      return formatter.format(creationTime);
+    }
   }
   
   // Get formatted last sign-in time

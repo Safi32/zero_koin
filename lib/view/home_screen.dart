@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
 import 'package:zero_koin/controllers/user_controller.dart';
-import 'package:zero_koin/controllers/admob_controller.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:zero_koin/view/invite_user_screen.dart';
 import 'package:zero_koin/view/rewards_screen.dart';
 
@@ -14,7 +12,6 @@ import 'package:zero_koin/widgets/earn_rewards.dart';
 
 import 'package:zero_koin/widgets/home_page_widgets.dart';
 import 'package:zero_koin/widgets/home_screen_widget.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:zero_koin/widgets/my_drawer.dart';
 
 import 'package:zero_koin/widgets/session_popup.dart';
@@ -31,7 +28,6 @@ class HomeScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final ThemeController themeController = Get.find<ThemeController>();
     final UserController userController = Get.find<UserController>();
-    final AdMobController adMobController = Get.find<AdMobController>();
 
     // Ensure status bar content is white
     SystemChrome.setSystemUIOverlayStyle(
@@ -59,7 +55,7 @@ class HomeScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  AppBarContainer(color: Colors.black.withOpacity(0.6)),
+                  AppBarContainer(color: Colors.black.withValues(alpha: 0.6)),
                   SizedBox(height: 12),
                   Column(
                     children: [
@@ -73,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                                 onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "Mining",
-                                  subTitle: "500",
+                                  subTitle: "0",
                                   imageURl: "assets/zerokoingold.png",
                                 ),
                               ),
@@ -84,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                                 onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "References",
-                                  subTitle: "100",
+                                  subTitle: "0",
                                   imageURl: "assets/Vector (7).svg",
                                 ),
                               ),
@@ -103,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                                 onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "Referrals",
-                                  subTitle: "10",
+                                  subTitle: "0",
                                   imageURl: "assets/Group (1).svg",
                                 ),
                               ),
@@ -154,64 +150,29 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    // AdMob Banner Ad Section
-                                    Obx(() {
-                                      if (adMobController.isAdLoading) {
-                                        return Container(
-                                          width: 320,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color: themeController.cardColor,
-                                            borderRadius: BorderRadius.circular(10),
+                                    // Simple Ad Placeholder
+                                    Container(
+                                      width: 320,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors.grey.withValues(alpha: 0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Ad",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: screenHeight * 0.02,
+                                            color: Colors.black54,
                                           ),
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              color: themeController.textColor,
-                                            ),
-                                          ),
-                                        );
-                                      } else if (adMobController.isBannerAdReady && adMobController.bannerAd != null) {
-                                        return Container(
-                                          width: adMobController.bannerAd!.size.width.toDouble(),
-                                          height: adMobController.bannerAd!.size.height.toDouble(),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            color: Colors.transparent,
-                                          ),
-                                          child: AdWidget(ad: adMobController.bannerAd!),
-                                        );
-                                      } else {
-                                        return DottedBorder(
-                                          options: RectDottedBorderOptions(
-                                            dashPattern: [10, 5],
-                                            strokeWidth: 2,
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              adMobController.reloadBannerAd();
-                                            },
-                                            child: Container(
-                                              width: 320,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: themeController.cardColor,
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  "Tap to Load Ad",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: screenHeight * 0.02,
-                                                    color: themeController.textColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }),
+                                        ),
+                                      ),
+                                    ),
                                     SizedBox(height: 14),
                                     Obx(
                                       () => HomePageWidgets(
