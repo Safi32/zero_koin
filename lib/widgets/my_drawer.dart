@@ -235,8 +235,18 @@ class MyDrawer extends StatelessWidget {
                             DrawerWidget(
                               imageUrl: "assets/icon_05.png",
                               title: "ZeroKoin Website",
-                              onPressed: () {
-                                Get.to(() => ZeroWebScreen());
+                              onPressed: () async {
+                                final Uri url = Uri.parse('https://www.zerokoin.com');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                } else {
+                                  // Handle error, e.g., show a snackbar
+                                  Get.snackbar(
+                                    'Error',
+                                    'Could not launch ${url.toString()}',
+                                    snackPosition: SnackPosition.BOTTOM,
+                                  );
+                                }
                               },
                             ),
                             DrawerWidget(

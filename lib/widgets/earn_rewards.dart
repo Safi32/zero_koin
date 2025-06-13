@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zero_koin/constant/app_colors.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/view/rewards_screen.dart';
 
 class EarnRewards extends StatelessWidget {
   final int zerokoins;
@@ -96,7 +98,10 @@ class EarnRewards extends StatelessWidget {
                         borderRadius: BorderRadius.circular(screenWidth * 0.02), // Responsive border radius
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the popup
+                      Get.to(() => const RewardsScreen()); // Navigate to rewards screen
+                    },
                     child: Text(
                       "View more Rewards",
                       style: TextStyle(

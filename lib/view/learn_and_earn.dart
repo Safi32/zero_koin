@@ -226,306 +226,315 @@ class _LearnAndEarnState extends State<LearnAndEarn> {
                         ),
                         child: Column(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: const Color(0xFF0682A2),
-                                      width: 2,
+                          // Horizontal scrollable row for language and categories
+                          SizedBox(
+                            height: 35,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  // Language selector
+                                  Container(
+                                    width: 150,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: const Color(0xFF0682A2),
+                                        width: 2,
+                                      ),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/language.png",
-                                          width: 18,
-                                          height: 18,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Expanded(
-                                          child: Obx(
-                                            () => DropdownButton<String>(
-                                              value:
-                                                  controller
-                                                              .selectedLanguage
-                                                              .value ==
-                                                          "Language"
-                                                      ? null
-                                                      : controller
-                                                          .selectedLanguage
-                                                          .value,
-                                              hint: Obx(
-                                                () => Text(
-                                                  controller.getTranslation(
-                                                    "language",
-                                                  ),
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize:
-                                                        screenWidth < 360
-                                                            ? 11
-                                                            : 13,
-                                                    color:
-                                                        themeController
-                                                            .textColor,
-                                                  ),
-                                                  textDirection:
-                                                      controller
-                                                                      .selectedLanguage
-                                                                      .value ==
-                                                                  "Urdu" ||
-                                                              controller
-                                                                      .selectedLanguage
-                                                                      .value ==
-                                                                  "Arabic"
-                                                          ? TextDirection.rtl
-                                                          : TextDirection.ltr,
-                                                ),
-                                              ),
-                                              isExpanded: true,
-                                              underline: const SizedBox(),
-                                              icon: Icon(
-                                                Icons.arrow_drop_down,
-                                                color:
-                                                    themeController.textColor,
-                                                size: 20,
-                                              ),
-                                              selectedItemBuilder: (
-                                                BuildContext context,
-                                              ) {
-                                                return controller.languages.map<
-                                                  Widget
-                                                >((String language) {
-                                                  bool isRTL =
-                                                      language == "Urdu" ||
-                                                      language == "Arabic";
-                                                  return Container(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                      language,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            screenWidth < 360
-                                                                ? 11
-                                                                : 13,
-                                                        color:
-                                                            themeController
-                                                                .textColor,
-                                                      ),
-                                                      textDirection:
-                                                          isRTL
-                                                              ? TextDirection
-                                                                  .rtl
-                                                              : TextDirection
-                                                                  .ltr,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            "assets/language.png",
+                                            width: 18,
+                                            height: 18,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Expanded(
+                                            child: Obx(
+                                              () => DropdownButton<String>(
+                                                value:
+                                                    controller
+                                                                .selectedLanguage
+                                                                .value ==
+                                                            "Language"
+                                                        ? null
+                                                        : controller
+                                                            .selectedLanguage
+                                                            .value,
+                                                hint: Obx(
+                                                  () => Text(
+                                                    controller.getTranslation(
+                                                      "language",
                                                     ),
-                                                  );
-                                                }).toList();
-                                              },
-                                              dropdownColor:
-                                                  themeController
-                                                      .contentBackgroundColor,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize:
-                                                    screenWidth < 360 ? 11 : 13,
-                                                color:
-                                                    themeController.textColor,
-                                              ),
-                                              items:
-                                                  controller.languages.asMap().entries.map((
-                                                    entry,
-                                                  ) {
-                                                    int index = entry.key;
-                                                    String language =
-                                                        entry.value;
-                                                    bool isLastItem =
-                                                        index ==
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize:
+                                                          screenWidth < 360
+                                                              ? 11
+                                                              : 13,
+                                                      color:
+                                                          themeController
+                                                              .textColor,
+                                                    ),
+                                                    textDirection:
                                                         controller
-                                                                .languages
-                                                                .length -
-                                                            1;
-
-                                                    return DropdownMenuItem<
-                                                      String
-                                                    >(
-                                                      value: language,
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        margin:
-                                                            const EdgeInsets.symmetric(
-                                                              vertical: 4.0,
-                                                              horizontal: 8.0,
-                                                            ),
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              vertical: 12.0,
-                                                              horizontal: 16.0,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          border: Border.all(
-                                                            color: const Color(
-                                                              0xFFC4B0B0,
-                                                            ),
-                                                            width: 1.0,
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                8.0,
-                                                              ),
+                                                                        .selectedLanguage
+                                                                        .value ==
+                                                                    "Urdu" ||
+                                                                controller
+                                                                        .selectedLanguage
+                                                                        .value ==
+                                                                    "Arabic"
+                                                            ? TextDirection.rtl
+                                                            : TextDirection.ltr,
+                                                  ),
+                                                ),
+                                                isExpanded: true,
+                                                underline: const SizedBox(),
+                                                icon: Icon(
+                                                  Icons.arrow_drop_down,
+                                                  color:
+                                                      themeController.textColor,
+                                                  size: 20,
+                                                ),
+                                                selectedItemBuilder: (
+                                                  BuildContext context,
+                                                ) {
+                                                  return controller.languages.map<
+                                                    Widget
+                                                  >((String language) {
+                                                    bool isRTL =
+                                                        language == "Urdu" ||
+                                                        language == "Arabic";
+                                                    return Container(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        language,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize:
+                                                              screenWidth < 360
+                                                                  ? 11
+                                                                  : 13,
+                                                          color:
+                                                              themeController
+                                                                  .textColor,
                                                         ),
-                                                        child: Align(
-                                                          alignment:
-                                                              Alignment
-                                                                  .centerLeft,
-                                                          child: Text(
-                                                            language,
-                                                            style: TextStyle(
-                                                              fontSize:
-                                                                  screenWidth <
-                                                                          360
-                                                                      ? 11
-                                                                      : 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  themeController
-                                                                      .textColor,
-                                                            ),
-                                                            textDirection:
-                                                                language ==
-                                                                            "Urdu" ||
-                                                                        language ==
-                                                                            "Arabic"
-                                                                    ? TextDirection
-                                                                        .rtl
-                                                                    : TextDirection
-                                                                        .ltr,
-                                                          ),
-                                                        ),
+                                                        textDirection:
+                                                            isRTL
+                                                                ? TextDirection
+                                                                    .rtl
+                                                                : TextDirection
+                                                                    .ltr,
                                                       ),
                                                     );
-                                                  }).toList(),
-                                              onChanged: (String? newValue) {
-                                                if (newValue != null) {
-                                                  controller.selectLanguage(
-                                                    newValue,
-                                                  );
-                                                }
-                                              },
+                                                  }).toList();
+                                                },
+                                                dropdownColor:
+                                                    themeController
+                                                        .contentBackgroundColor,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      screenWidth < 360 ? 11 : 13,
+                                                  color:
+                                                      themeController.textColor,
+                                                ),
+                                                items:
+                                                    controller.languages.asMap().entries.map((
+                                                      entry,
+                                                    ) {
+                                                      int index = entry.key;
+                                                      String language =
+                                                          entry.value;
+                                                      bool isLastItem =
+                                                          index ==
+                                                          controller
+                                                                  .languages
+                                                                  .length -
+                                                              1;
+
+                                                      return DropdownMenuItem<
+                                                        String
+                                                      >(
+                                                        value: language,
+                                                        child: Container(
+                                                          width: double.infinity,
+                                                          margin:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 4.0,
+                                                                horizontal: 8.0,
+                                                              ),
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 12.0,
+                                                                horizontal: 16.0,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                              color: const Color(
+                                                                0xFFC4B0B0,
+                                                              ),
+                                                              width: 1.0,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  8.0,
+                                                                ),
+                                                          ),
+                                                          child: Align(
+                                                            alignment:
+                                                                Alignment
+                                                                    .centerLeft,
+                                                            child: Text(
+                                                              language,
+                                                              style: TextStyle(
+                                                                fontSize:
+                                                                    screenWidth <
+                                                                            360
+                                                                        ? 11
+                                                                        : 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color:
+                                                                    themeController
+                                                                        .textColor,
+                                                              ),
+                                                              textDirection:
+                                                                  language ==
+                                                                              "Urdu" ||
+                                                                          language ==
+                                                                              "Arabic"
+                                                                      ? TextDirection
+                                                                          .rtl
+                                                                      : TextDirection
+                                                                          .ltr,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                onChanged: (String? newValue) {
+                                                  if (newValue != null) {
+                                                    controller.selectLanguage(
+                                                      newValue,
+                                                    );
+                                                  }
+                                                },
+                                              ),
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  // Learn NFT's category
+                                  SizedBox(
+                                    width: 150,
+                                    child: Obx(
+                                      () => LearnAndEarnWidget(
+                                        title: controller.getTranslation(
+                                          "learn_nfts",
                                         ),
-                                      ],
+                                        isSelected: controller.isCategorySelected(
+                                          "Learn NFT's",
+                                        ),
+                                        onPressed: () {
+                                          controller.selectCategory("Learn NFT's");
+                                        },
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Obx(
-                                  () => LearnAndEarnWidget(
-                                    title: controller.getTranslation(
-                                      "learn_nfts",
+                                  const SizedBox(width: 12),
+                                  // Learn Crypto category
+                                  SizedBox(
+                                    width: 150,
+                                    child: Obx(
+                                      () => LearnAndEarnWidget(
+                                        title: controller.getTranslation(
+                                          "learn_crypto",
+                                        ),
+                                        isSelected: controller.isCategorySelected(
+                                          "Learn Crypto",
+                                        ),
+                                        onPressed: () {
+                                          controller.selectCategory("Learn Crypto");
+                                        },
+                                      ),
                                     ),
-                                    isSelected: controller.isCategorySelected(
-                                      "Learn NFT's",
-                                    ),
-                                    onPressed: () {
-                                      controller.selectCategory("Learn NFT's");
-                                    },
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Obx(
-                                  () => LearnAndEarnWidget(
-                                    title: controller.getTranslation(
-                                      "learn_crypto",
+                                  const SizedBox(width: 12),
+                                  // Learn Blockchain category
+                                  SizedBox(
+                                    width: 150,
+                                    child: Obx(
+                                      () => LearnAndEarnWidget(
+                                        title: controller.getTranslation(
+                                          "learn_blockchain",
+                                        ),
+                                        isSelected: controller.isCategorySelected(
+                                          "Learn Blockchain",
+                                        ),
+                                        onPressed: () {
+                                          controller.selectCategory(
+                                            "Learn Blockchain",
+                                          );
+                                        },
+                                      ),
                                     ),
-                                    isSelected: controller.isCategorySelected(
-                                      "Learn Crypto",
-                                    ),
-                                    onPressed: () {
-                                      controller.selectCategory("Learn Crypto");
-                                    },
                                   ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Obx(
-                                  () => LearnAndEarnWidget(
-                                    title: controller.getTranslation(
-                                      "learn_blockchain",
+                                  const SizedBox(width: 12),
+                                  // Learn Mining category
+                                  SizedBox(
+                                    width: 150,
+                                    child: Obx(
+                                      () => LearnAndEarnWidget(
+                                        title: controller.getTranslation(
+                                          "learn_mining",
+                                        ),
+                                        isSelected: controller.isCategorySelected(
+                                          "Learn Mining",
+                                        ),
+                                        onPressed: () {
+                                          controller.selectCategory("Learn Mining");
+                                        },
+                                      ),
                                     ),
-                                    isSelected: controller.isCategorySelected(
-                                      "Learn Blockchain",
-                                    ),
-                                    onPressed: () {
-                                      controller.selectCategory(
-                                        "Learn Blockchain",
-                                      );
-                                    },
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Obx(
-                                  () => LearnAndEarnWidget(
-                                    title: controller.getTranslation(
-                                      "learn_mining",
+                                  const SizedBox(width: 12),
+                                  // Learn Stock Market category
+                                  SizedBox(
+                                    width: 150,
+                                    child: Obx(
+                                      () => LearnAndEarnWidget(
+                                        title: controller.getTranslation(
+                                          "learn_stock_market",
+                                        ),
+                                        isSelected: controller.isCategorySelected(
+                                          "Learn Stock Market",
+                                        ),
+                                        onPressed: () {
+                                          controller.selectCategory(
+                                            "Learn Stock Market",
+                                          );
+                                        },
+                                      ),
                                     ),
-                                    isSelected: controller.isCategorySelected(
-                                      "Learn Mining",
-                                    ),
-                                    onPressed: () {
-                                      controller.selectCategory("Learn Mining");
-                                    },
                                   ),
-                                ),
+                                ],
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Obx(
-                                  () => LearnAndEarnWidget(
-                                    title: controller.getTranslation(
-                                      "learn_stock_market",
-                                    ),
-                                    isSelected: controller.isCategorySelected(
-                                      "Learn Stock Market",
-                                    ),
-                                    onPressed: () {
-                                      controller.selectCategory(
-                                        "Learn Stock Market",
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                           SizedBox(height: 5),
                           Row(
@@ -550,7 +559,7 @@ class _LearnAndEarnState extends State<LearnAndEarn> {
                           ),
                           SizedBox(height: 5),
                           Container(
-                            height: screenHeight * 0.3,
+                            height: screenHeight * 0.39,
                             width: screenWidth,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
@@ -783,7 +792,7 @@ class _LearnAndEarnState extends State<LearnAndEarn> {
 
   Widget _buildCustomScrollbar(double screenHeight) {
     // Calculate available height for scrollbar (container height minus padding)
-    double availableHeight = screenHeight * 0.3 - 100; // Updated container height minus top/bottom padding
+    double availableHeight = screenHeight * 0.39 - 100; // Updated container height minus top/bottom padding
 
     if (!_scrollController.hasClients) {
       return Container(
