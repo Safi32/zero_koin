@@ -11,7 +11,7 @@ class ApiService {
   // For Android emulator: 'http://10.0.2.2:5001/api'
   // For iOS simulator: 'http://localhost:5001/api'
   // For production: 'https://your-backend-domain.com/api'
-  static const String baseUrl = 'http://10.0.2.2:5001/api';
+  static const String baseUrl = 'https://zerokoinapp-production.up.railway.app/api';
   
   // Sync Firebase user to MongoDB
   static Future<Map<String, dynamic>?> syncFirebaseUser() async {
