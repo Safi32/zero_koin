@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 
 class ApiService {
   // Update this URL to match your backend deployment
@@ -150,6 +149,42 @@ class ApiService {
       }
     } catch (e) {
       print('❌ Error updating wallet address: $e');
+      return null;
+    }
+  }
+
+  // Get total user count (public endpoint)
+  static Future<Map<String, dynamic>?> getUserCount() async {
+    try {
+      print('📊 Fetching total user count...');
+      final response = await http.get(
+        Uri.parse('$baseUrl/users/count'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print('✅ User count fetched successfully: ${data['totalUsers']}');
+        return data;
+      } else if (response.statusCode == 404) {
+        print('❌ User count endpoint not found: ${baseUrl}/users/count');
+        print('💡 Check if the endpoint is implemented in the backend or if the server is running');
+        return null;
+      } else {
+        print('❌ Failed to get user count: ${response.statusCode} - ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('⚠️ Error getting user count: $e');
+      if (e is SocketException) {
+        print('🌐 Network error: Check your internet connection or if the server is running');
+      } else if (e is TimeoutException) {
+        print('⏱️ Request timed out: Server may be overloaded or unreachable');
+      } else if (e is FormatException) {
+        print('📄 Response format error: Server returned invalid JSON');
+      }
       return null;
     }
   }

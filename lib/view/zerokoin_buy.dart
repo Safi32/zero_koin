@@ -20,6 +20,7 @@ class _BuyScreenState extends State<ZerokoinBuy> {
       tradingPair: 'ZEROKOIN/USDT',
       listingDate: '22.09.2024',
       iconColor: const Color(0xFF1FC7D4),
+      url: 'https://pancakeswap.finance/swap?outputCurrency=0x99349f73449b2bdfa631defb0570df04afd70e97&inputCurrency=0x55d398326f99059fF775485246999027B3197955',
     ),
     TradingCard(
       platformName: 'DEXTOOLS.io',
@@ -27,6 +28,7 @@ class _BuyScreenState extends State<ZerokoinBuy> {
       tradingPair: 'ZEROKOIN/USDT',
       listingDate: '22.09.2024',
       iconColor: const Color(0xFF05A3C9),
+      url: 'https://www.dextools.io/app/en/bnb/pair-explorer/0x2b9746cd3f825f82e0c0356151ad71b098431613?t=1750011149650',
     ),
     TradingCard(
       platformName: 'SunSwap',

@@ -76,7 +76,7 @@ class UserRegisterationScreen extends StatelessWidget {
                                     recognizer:
                                         TapGestureRecognizer()
                                           ..onTap = () async {
-                                            final Uri url = Uri.parse('https://google.com');
+                                            final Uri url = Uri.parse('https://zerokoin.com/privacypolicy');
                                             try {
                                               if (await canLaunchUrl(url)) {
                                                 await launchUrl(

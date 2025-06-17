@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDyMWE4ueqdGT7FSWOFM-2VfmlLHduZQIQ',
-    appId: '1:898085251418:android:1b197c8211a119611f2b63',
+    appId: '1:898085251418:android:e5d9e4144565ea7e1f2b63',
     messagingSenderId: '898085251418',
     projectId: 'zerokoin-4e239',
     storageBucket: 'zerokoin-4e239.firebasestorage.app',
@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: 'your-messaging-sender-id',
     projectId: 'your-project-id',
     storageBucket: 'your-project-id.appspot.com',
-    iosBundleId: 'com.example.zeroKoin',
+    iosBundleId: 'com.zerokoin.www',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: 'your-messaging-sender-id',
     projectId: 'your-project-id',
     storageBucket: 'your-project-id.appspot.com',
-    iosBundleId: 'com.example.zeroKoin',
+    iosBundleId: 'com.zerokoin.www',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

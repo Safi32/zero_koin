@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -17,6 +18,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     _themeController = Get.find<ThemeController>();
+  }
+
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      Get.snackbar(
+        'Error',
+        'Could not launch $url',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   @override
@@ -95,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       SizedBox(height: 16),
                       _buildInfoItem('Cache Used', '20.8 MB'),
                       SizedBox(height: 16),
-                      _buildInfoItem('App Version', '0.0.0.0'),
+                      _buildInfoItem('App Version', '1.0.0'),
 
                       SizedBox(height: 40),
                       // BscScan Card
@@ -108,8 +119,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             BoxShadow(
                               color:
                                   _themeController.isDarkMode
-                                      ? Colors.black.withValues(alpha: 0.3)
-                                      : Colors.grey.withValues(alpha: 0.1),
+                                      ? Colors.black.withOpacity(0.3)
+                                      : Colors.grey.withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 10,
                               offset: Offset(0, 2),
@@ -120,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Blockchains',
+                              'Blockchain',
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w500,
@@ -128,26 +139,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                             SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 25,
-                                  child: Image.asset(
-                                    'assets/image.png',
-                                    fit: BoxFit.cover,
+                            GestureDetector(
+                              onTap: () => _launchUrl('https://bscscan.com/address/0x99349F73449b2BDFa631deFB0570df04afD70E97'),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 25,
+                                    child: Image.asset(
+                                      'assets/image.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  'BscScan',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: _themeController.isDarkMode ? Colors.white : Colors.black,
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'BscScan',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: _themeController.isDarkMode ? Colors.white : Colors.black,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
 
                             SizedBox(height: 16),
@@ -215,7 +229,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             value: value,
             onChanged: onChanged,
             activeColor: Colors.green,
-            activeTrackColor: Colors.green.withValues(alpha: 0.3),
+            activeTrackColor: Colors.green.withOpacity(0.3),
             inactiveThumbColor: Colors.grey[400],
             inactiveTrackColor: Colors.grey[300],
           ),

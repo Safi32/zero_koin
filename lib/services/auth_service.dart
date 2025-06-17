@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'api_service.dart';
+import 'device_auth_service.dart';
+import '../widgets/device_auth_warning_dialog.dart';
 
 class AuthService extends GetxController {
   static AuthService get instance => Get.find();
@@ -37,29 +39,65 @@ class AuthService extends GetxController {
         ),
         barrierDismissible: false,
       );
-      
+
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
+
       if (googleUser == null) {
         // User canceled the sign-in
         Get.back(); // Close loading dialog
         return null;
       }
-      
+
+      // Check device authentication before proceeding
+      final deviceAuthService = DeviceAuthService.instance;
+      final userEmail = googleUser.email;
+
+      // Debug: Print device auth info
+      if (Get.isLogEnable) {
+        final debugInfo = await deviceAuthService.getDeviceAuthInfo();
+        print('🔍 Device Auth Debug Info: $debugInfo');
+        print('🔍 Current user trying to sign in: $userEmail');
+        print('🔍 Is different user: ${await deviceAuthService.isDifferentUser(userEmail)}');
+      }
+
+      // Check if this is a different user trying to sign in
+      if (await deviceAuthService.isDifferentUser(userEmail)) {
+        Get.back(); // Close loading dialog
+
+        final lastUserEmail = await deviceAuthService.getLastUserEmail();
+
+        if (Get.isLogEnable) {
+          print('🚨 Different user detected! Last: $lastUserEmail, New: $userEmail');
+        }
+
+        // Show access denied dialog
+        await DeviceAuthWarningDialog.show();
+
+        // Sign out from Google and return null to prevent sign-in
+        await _googleSignIn.signOut();
+        if (Get.isLogEnable) {
+          print('❌ Different user blocked from signing in');
+        }
+        return null;
+      }
+
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = 
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      
+
       // Sign in to Firebase with the Google credential
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
+
+      // Update device authentication data
+      await deviceAuthService.setCurrentUser(userEmail);
 
       // Sync user data to MongoDB
       await _syncUserToMongoDB();
@@ -108,15 +146,19 @@ class AuthService extends GetxController {
         ),
         barrierDismissible: false,
       );
-      
+
+      // Mark user as signed out but keep device association
+      final deviceAuthService = DeviceAuthService.instance;
+      await deviceAuthService.clearDeviceAuth();
+
       // Sign out from Google
       await _googleSignIn.signOut();
-      
+
       // Sign out from Firebase
       await _auth.signOut();
-      
+
       Get.back(); // Close loading dialog
-      
+
       // Show success message
       Get.snackbar(
         'Success',
@@ -301,5 +343,17 @@ class AuthService extends GetxController {
       }
       return false;
     }
+  }
+
+  // Get device authentication info for debugging
+  Future<Map<String, dynamic>> getDeviceAuthInfo() async {
+    final deviceAuthService = DeviceAuthService.instance;
+    return await deviceAuthService.getDeviceAuthInfo();
+  }
+
+  // Reset device authentication data (for testing purposes)
+  Future<void> resetDeviceAuth() async {
+    final deviceAuthService = DeviceAuthService.instance;
+    await deviceAuthService.resetDeviceData();
   }
 }

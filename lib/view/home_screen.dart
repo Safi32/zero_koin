@@ -107,23 +107,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(width: 20.0),
                             Expanded(
                               child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
-                                        ),
-                                        child: Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          child: EarnRewards(),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
+                                onTap: () {},
                                 child: HomeScreenWidget(
                                   title: "Power",
                                   subTitle: "1/4",

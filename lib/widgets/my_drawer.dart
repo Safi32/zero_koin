@@ -276,20 +276,22 @@ class MyDrawer extends StatelessWidget {
                             DrawerWidget(
                               imageUrl: "assets/icon_08.png",
                               title: "Whitepaper",
-                              onPressed: () {
-                                Get.to(() => WhitePaperScreen());
+                              onPressed: () async {
+                                final Uri url = Uri.parse('https://zerokoin.com/pdf-file/Whitepaper.pdf');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                } else {
+                                  Get.snackbar(
+                                    'Error',
+                                    'Could not launch whitepaper',
+                                    snackPosition: SnackPosition.BOTTOM,
+                                  );
+                                }
                               },
                             ),
                             Divider(
                               thickness: 1,
                               color: themeController.textColor.withOpacity(0.2),
-                            ),
-                            DrawerWidget(
-                              imageUrl: "assets/icon_09.png",
-                              title: "Help AI (Telegram)",
-                              onPressed: () {
-                                Get.to(() => HelpAiScreen());
-                              },
                             ),
                             DrawerWidget(
                               imageUrl: "assets/icon_10.png",

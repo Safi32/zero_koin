@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class TradingCard {
@@ -8,6 +7,7 @@ class TradingCard {
   final String listingDate;
   final bool isLaunchingSoon;
   final Color iconColor;
+  final String? url;
 
   TradingCard({
     required this.platformName,
@@ -16,5 +16,6 @@ class TradingCard {
     required this.listingDate,
     this.isLaunchingSoon = false,
     this.iconColor = Colors.orange,
+    this.url,
   });
 }

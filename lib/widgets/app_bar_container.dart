@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get.dart';
+import 'package:zero_koin/controllers/user_stats_controller.dart';
 import 'package:zero_koin/view/notification_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -19,6 +19,7 @@ class AppBarContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final UserStatsController userStatsController = Get.find<UserStatsController>();
 
     // Ensure status bar content is white when app bar is visible
     SystemChrome.setSystemUIOverlayStyle(
@@ -103,12 +104,14 @@ class AppBarContainer extends StatelessWidget {
                 ),
                 if (showTotalPosition) ...[
                   SizedBox(height: 6),
-                  Text(
-                    "Total Positions 77853",
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.022,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
+                  Obx(
+                    () => Text(
+                      "Total Positions ${userStatsController.formattedUserCount}",
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.022,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ],

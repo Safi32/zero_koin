@@ -51,6 +51,7 @@ dependencies:
   http: ^1.1.0
   walletconnect_dart: ^0.0.11
   google_fonts: ^6.2.1
+  crypto: ^3.0.3
   
   
   
@@ -113,24 +114,24 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/Frame 1 (2).png"
+  image_path: "assets/Frame 1 (6).png"
   min_sdk_android: 21
   remove_alpha_ios: true
 
   # Adaptive icon configuration for Android
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/Frame 1 (2).png"
+  adaptive_icon_foreground: "assets/Frame 1 (6).png"
   adaptive_icon_padding: 25
 
   web:
     generate: true
-    image_path: "assets/Frame 1 (2).png"
+    image_path: "assets/Frame 1 (6).png"
     background_color: "#FFFFFF"
     theme_color: "#1976D2"
   windows:
     generate: true
-    image_path: "assets/Frame 1 (2).png"
+    image_path: "assets/Frame 1 (6).png"
     icon_size: 48
   macos:
     generate: true
-    image_path: "assets/Frame 1 (2).png"
+    image_path: "assets/Frame 1 (6).png"

@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:zero_koin/models/trading_cards.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TradingCardWidget extends StatelessWidget {
   final TradingCard card;
 
   const TradingCardWidget({super.key, required this.card});
+
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +24,10 @@ class TradingCardWidget extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: Colors.white.withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -93,21 +100,24 @@ class TradingCardWidget extends StatelessWidget {
                 const SizedBox(height: 8),
                 // Trading pair button
                 SizedBox(
-                  width: 240, // Increased from 200
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0682A2),
-                      borderRadius: BorderRadius.circular(12.8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        card.tradingPair,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  width: 240,
+                  child: GestureDetector(
+                    onTap: card.url != null ? () => _launchUrl(card.url!) : null,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0682A2),
+                        borderRadius: BorderRadius.circular(12.8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          card.tradingPair,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
@@ -118,7 +128,7 @@ class TradingCardWidget extends StatelessWidget {
                 Text(
                   'Listing date: ${card.listingDate}',
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: Colors.white.withOpacity(0.7),
                     fontSize: 12,
                   ),
                 ),

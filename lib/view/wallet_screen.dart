@@ -18,6 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zero_koin/controllers/user_controller.dart';
 import 'package:zero_koin/widgets/gradient_circular_progress_painter.dart';
+import 'package:zero_koin/view/zerokoin_buy.dart';
 
 // Mock class for demonstration purposes
 class MockSessionStatus {
@@ -474,12 +475,6 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
     }
   }
 
-
-
-
-
-
-
   void _handleWithdraw() {
     final userBalance = _userController.balance.value;
 
@@ -539,6 +534,7 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -862,7 +858,14 @@ class _WalletScreenState extends State<WalletScreen> with WidgetsBindingObserver
                                                   Colors.transparent,
                                               foregroundColor: Colors.white,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const ZerokoinBuy(),
+                                                ),
+                                              );
+                                            },
                                             child: Text(
                                               "Exchange",
                                               style: TextStyle(fontSize: 18),

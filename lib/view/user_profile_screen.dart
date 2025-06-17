@@ -186,28 +186,32 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         ),
                                       ),
                                       SizedBox(width: 20),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Obx(() => Text(
-                                            authService.userDisplayName ?? 'User',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                          )),
-                                          Obx(() => Text(
-                                            authService.userEmail ?? 'No email',
-                                            style: TextStyle(
-                                              color: Color(0xFFC4C9D5),
-                                              fontSize: 15,
-                                            ),
-                                          )),
-                                        ],
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Obx(() => Text(
+                                              authService.userDisplayName ?? 'User',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
+                                            Obx(() => Text(
+                                              authService.userEmail ?? 'No email',
+                                              style: TextStyle(
+                                                color: Color(0xFFC4C9D5),
+                                                fontSize: 15,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
+                                          ],
+                                        ),
                                       ),
-                                      Spacer(),
+                                      SizedBox(width: 10),
                                       GestureDetector(
                                         onTap: () async {
                                           final ThemeController themeController = Get.find<ThemeController>();
