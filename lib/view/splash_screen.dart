@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/view/user_registeration_screen.dart';
+import 'package:zero_koin/view/bottom_bar.dart';
+import 'package:zero_koin/services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -48,8 +50,20 @@ class _SplashScreenState extends State<SplashScreen>
 
     // Navigate to next screen after 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
-      Get.to(() => const UserRegisterationScreen());
+      _checkAuthAndNavigate();
     });
+  }
+
+  void _checkAuthAndNavigate() {
+    final authService = AuthService.instance;
+
+    if (authService.isSignedIn) {
+      // User is already signed in, go to home screen
+      Get.offAll(() => const BottomBar());
+    } else {
+      // User is not signed in, go to registration screen
+      Get.offAll(() => const UserRegisterationScreen());
+    }
   }
 
   @override
@@ -152,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen>
                   '© 2024 - 2025 Zero Koin',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -162,7 +176,7 @@ class _SplashScreenState extends State<SplashScreen>
                   'Learn and Earn Crypto',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
