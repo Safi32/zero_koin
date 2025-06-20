@@ -11,7 +11,6 @@ class ApiService {
   // For iOS simulator: 'http://localhost:5001/api'
   // For production: 'https://your-backend-domain.com/api'
   static const String baseUrl = 'https://zerokoinapp-production.up.railway.app/api';
-  
   // Sync Firebase user to MongoDB
   static Future<Map<String, dynamic>?> syncFirebaseUser() async {
     try {
@@ -185,6 +184,37 @@ class ApiService {
       } else if (e is FormatException) {
         print('📄 Response format error: Server returned invalid JSON');
       }
+      return null;
+    }
+  }
+
+  // Increment calculator usage
+  static Future<int?> incrementCalculatorUsage() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('🔍 No Firebase user found for calculator usage increment');
+        return null;
+      }
+      final idToken = await user.getIdToken();
+      print('🧮 Incrementing calculator usage for user ${user.uid}...');
+      final response = await http.put(
+        Uri.parse('$baseUrl/users/calculator-usage'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print('✅ Calculator usage incremented: ${data['calculatorUsage']}');
+        return data['calculatorUsage'] as int?;
+      } else {
+        print('❌ Failed to increment calculator usage: Status: \\${response.statusCode}, Body: \\${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Error incrementing calculator usage: $e');
       return null;
     }
   }

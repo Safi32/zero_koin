@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:zero_koin/controllers/theme_controller.dart';
 import 'package:zero_koin/view/bottom_bar.dart';
+import 'package:zero_koin/services/api_service.dart';
 
 import 'package:zero_koin/widgets/app_bar_container.dart';
 import 'package:zero_koin/widgets/my_drawer.dart';
@@ -84,6 +85,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
 
     liquidationController.text = liquidationPrice.toStringAsFixed(2);
+
+    // Increment calculator usage in backend
+    ApiService.incrementCalculatorUsage().then((usage) {
+      if (usage != null) {
+        print('Calculator usage incremented: $usage');
+      } else {
+        print('Failed to increment calculator usage');
+      }
+    });
   }
 
   @override

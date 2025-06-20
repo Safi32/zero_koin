@@ -257,7 +257,7 @@ class _SocailMediaPagesState extends State<SocailMediaPages> {
                               ),
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Discord.svg',
-                                socialMediaUrl: 'https://discord.gg/zerokoin',
+                                socialMediaUrl: 'https://bit.ly/zerokoinapp',
                               ),
                               SocailMediaWidgets(
                                 imageUrl: 'assets/X.svg',
@@ -271,7 +271,7 @@ class _SocailMediaPagesState extends State<SocailMediaPages> {
                             children: [
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Facebook.svg',
-                                socialMediaUrl: 'https://facebook.com/zerokoinapp',
+                                socialMediaUrl: 'https://www.facebook.com/share/14nd5SMsBJ/',
                               ),
                               SocailMediaWidgets(
                                 imageUrl: 'assets/Instagram.svg',
