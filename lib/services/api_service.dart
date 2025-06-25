@@ -165,7 +165,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('✅ User count fetched successfully: ${data['totalUsers']}');
+        print('✅ User count fetched successfully: [1m${data['count']}[0m');
         return data;
       } else if (response.statusCode == 404) {
         print('❌ User count endpoint not found: ${baseUrl}/users/count');

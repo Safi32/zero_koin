@@ -6,6 +6,7 @@ import 'package:zero_koin/controllers/theme_controller.dart';
 import 'package:zero_koin/controllers/user_controller.dart';
 import 'package:zero_koin/controllers/user_stats_controller.dart';
 import 'package:zero_koin/services/auth_service.dart';
+import 'package:zero_koin/services/notification_service.dart';
 import 'package:zero_koin/view/splash_screen.dart';
 import 'firebase_options.dart';
 
@@ -30,6 +31,9 @@ void main() async {
 
   // Initialize UserStatsController
   Get.put(UserStatsController());
+
+  // Initialize NotificationService
+  Get.put(NotificationService());
 
   // Set status bar to light content (white text/icons)
   SystemChrome.setSystemUIOverlayStyle(

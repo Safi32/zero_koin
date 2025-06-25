@@ -28,8 +28,8 @@ class UserStatsController extends GetxController {
       
       final data = await ApiService.getUserCount();
       
-      if (data != null && data['totalUsers'] != null) {
-        totalUsers.value = data['totalUsers'];
+      if (data != null && data['count'] != null) {
+        totalUsers.value = data['count'];
         print('User count loaded: ${totalUsers.value}');
       } else {
         error.value = 'Failed to load user count';

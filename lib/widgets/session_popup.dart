@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:zero_koin/widgets/timer_popup.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zero_koin/services/notification_service.dart';
 
 class SessionPopup extends StatefulWidget {
   const SessionPopup({super.key});
@@ -25,6 +26,20 @@ class _SessionPopupState extends State<SessionPopup> {
     super.initState();
     _loadSessionStates();
     _startTimerCheck();
+
+    // Trigger notification when popup is displayed
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _triggerSessionUnlockedNotification();
+    });
+  }
+
+  Future<void> _triggerSessionUnlockedNotification() async {
+    try {
+      final notificationService = Get.find<NotificationService>();
+      await notificationService.showSessionUnlockedNotification();
+    } catch (e) {
+      print('Error triggering notification: $e');
+    }
   }
 
   @override
